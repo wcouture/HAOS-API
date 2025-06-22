@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "Iftuluv965fSQGP7LN3VoS4Ad7t6aivBZnvaZ1xqTJ0=",
+  "Source": "HAOS-API",
+  "BasePath": "_content/HAOS-API",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}
