@@ -3,10 +3,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HAOS.Services;
 
-public class programCircuitService : IProgramCircuitService
+public class ProgramCircuitService : IProgramCircuitService
 {
     private readonly TrainingDb _context;
-    public programCircuitService(TrainingDb context)
+    public ProgramCircuitService(TrainingDb context)
     {
         _context = context;
     }

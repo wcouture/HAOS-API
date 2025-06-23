@@ -23,14 +23,16 @@ public interface IProgramController
     Task<IResult> GetProgramDayById(int id);
     Task<IResult> AddProgramDay(ProgramDay programDay, int segmentId);
     Task<IResult> UpdateProgramDay(ProgramDay programDay, int id);
-    Task<IResult> DeleteProgramDay(int id);
+    Task<IResult> DeleteProgramDay(int segmentId, int id);
 
     // Circuit Data
     Task<IResult> GetCircuits(int dayId);
     Task<IResult> GetCircuitById(int id);
     Task<IResult> AddCircuit(Circuit circuit, int dayId);
     Task<IResult> UpdateCircuit(Circuit circuit, int id);
-    Task<IResult> DeleteCircuit(int id);
+    Task<IResult> DeleteCircuit(int dayId, int id);
+    Task<IResult> RemoveWorkout(int circuitId, int workoutId);
+    Task<IResult> AddWorkout(int circuitId, int workoutId);
 
     // Workout Data
     Task<IResult> GetExercises(int circuitId);

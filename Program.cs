@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using HAOS.Models;
 using HAOS.Services;
 using HAOS.Controllers;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
@@ -11,6 +12,10 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddDbContext<TrainingDb>();
 builder.Services.AddScoped<IProgramService, ProgramService>();
 builder.Services.AddScoped<IProgramSegmentService, ProgramSegmentService>();
+builder.Services.AddScoped<IProgramDayService, ProgramDayService>();
+builder.Services.AddScoped<IProgramCircuitService, ProgramCircuitService>();
+builder.Services.AddScoped<IWorkoutService, WorkoutService>();
+
 builder.Services.AddScoped<IProgramController, ProgramController>();
 
 builder.Services.AddSwaggerGen(c => {
@@ -39,6 +44,27 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+// Custom authentication
+app.Use((context, next) =>
+{
+    var _dbContext = context.RequestServices.GetRequiredService<TrainingDb>();
+
+
+    var authToken = context.Request.Headers["Authorization"];
+    // Check if authToken is valid here
+
+    if (string.IsNullOrEmpty(authToken))
+    {
+        context.Response.StatusCode = 401;
+        context.Response.WriteAsync("Missing Authorization header");
+
+        return Task.CompletedTask;
+    }
+
+    // Continue on if all is valid
+    return next(context);
+});
 
 
 app.MapGet("/", () =>

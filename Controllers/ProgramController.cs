@@ -7,17 +7,17 @@ public class ProgramController : IProgramController
 {
     private readonly IProgramService _programService;
     private readonly IProgramSegmentService _programSegmentService;
-    // private readonly IProgramDayService _programDayService;
-    // private readonly IProgramCircuitService _programCircuitService;
-    // private readonly IWorkoutService _workoutService;
+    private readonly IProgramDayService _programDayService;
+    private readonly IProgramCircuitService _programCircuitService;
+    private readonly IWorkoutService _workoutService;
 
-    public ProgramController(IProgramService programService, IProgramSegmentService programSegmentService)
+    public ProgramController(IProgramService programService, IProgramSegmentService programSegmentService, IProgramDayService programDayService, IProgramCircuitService programCircuitService, IWorkoutService workoutService)
     {
         _programService = programService;
         _programSegmentService = programSegmentService;
-        // _programDayService = programDayService;
-        // _programCircuitService = programCircuitService;
-        // _workoutService = workoutService;
+        _programDayService = programDayService;
+        _programCircuitService = programCircuitService;
+        _workoutService = workoutService;
     }
 
     // Program CRUD
@@ -142,17 +142,45 @@ public class ProgramController : IProgramController
     }
 
     // Program Day CRUD
-    public Task<IResult> AddProgramDay(ProgramDay programDay, int segmentId)
+    public async Task<IResult> AddProgramDay(ProgramDay programDay, int segmentId)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var newDay = await _programDayService.CreateProgramDay(programDay, segmentId);
+            return Results.Created($"/days/find/{newDay.Id}", newDay);
+        }
+        catch (DbConflictException ex)
+        {
+            return Results.Conflict(ex.Message);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return Results.NotFound(ex.Message);
+        }
     }
-    public Task<IResult> DeleteProgramDay(int id)
+    public async Task<IResult> DeleteProgramDay(int segmentId, int id)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var deletedDay = await _programDayService.DeleteProgramDay(segmentId, id);
+            return Results.Ok(deletedDay);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return Results.NotFound(ex.Message);
+        }
     }
-    public Task<IResult> GetProgramDayById(int id)
+    public async Task<IResult> GetProgramDayById(int id)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var day = await _programDayService.GetProgramDay(id);
+            return Results.Ok(day);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return Results.NotFound(ex.Message);
+        }
     }
     public Task<IResult> GetProgramDays(int segmentId)
     {
@@ -168,7 +196,7 @@ public class ProgramController : IProgramController
     {
         throw new NotImplementedException();
     }
-    public Task<IResult> DeleteCircuit(int id)
+    public Task<IResult> DeleteCircuit(int dayId, int id)
     {
         throw new NotImplementedException();
     }
@@ -181,6 +209,14 @@ public class ProgramController : IProgramController
         throw new NotImplementedException();
     }
     public Task<IResult> UpdateCircuit(Circuit circuit, int id)
+    {
+        throw new NotImplementedException();
+    }
+    public Task<IResult> AddWorkout(int circuitId, int workoutId)
+    {
+        throw new NotImplementedException();
+    }
+    public Task<IResult> RemoveWorkout(int circuitId, int workoutId)
     {
         throw new NotImplementedException();
     }
@@ -207,5 +243,6 @@ public class ProgramController : IProgramController
     {
         throw new NotImplementedException();
     }
+
     
 }
