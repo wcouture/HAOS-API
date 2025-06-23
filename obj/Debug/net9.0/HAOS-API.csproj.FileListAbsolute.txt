@@ -6,7 +6,6 @@
 /Users/williamcouture/Personal/HAOS-App/HAOS-API/bin/Debug/net9.0/HAOS-API.runtimeconfig.json
 /Users/williamcouture/Personal/HAOS-App/HAOS-API/bin/Debug/net9.0/HAOS-API.dll
 /Users/williamcouture/Personal/HAOS-App/HAOS-API/bin/Debug/net9.0/HAOS-API.pdb
-/Users/williamcouture/Personal/HAOS-App/HAOS-API/bin/Debug/net9.0/Microsoft.AspNetCore.OpenApi.dll
 /Users/williamcouture/Personal/HAOS-App/HAOS-API/bin/Debug/net9.0/Microsoft.OpenApi.dll
 /Users/williamcouture/Personal/HAOS-App/HAOS-API/obj/Debug/net9.0/HAOS-API.csproj.AssemblyReference.cache
 /Users/williamcouture/Personal/HAOS-App/HAOS-API/obj/Debug/net9.0/HAOS-API.GeneratedMSBuildEditorConfig.editorconfig
@@ -55,8 +54,6 @@
 /Users/williamcouture/Personal/HAOS-App/HAOS-API/bin/Debug/net9.0/Microsoft.Extensions.Options.dll
 /Users/williamcouture/Personal/HAOS-App/HAOS-API/bin/Debug/net9.0/Microsoft.Extensions.Primitives.dll
 /Users/williamcouture/Personal/HAOS-App/HAOS-API/bin/Debug/net9.0/Mono.TextTemplating.dll
-/Users/williamcouture/Personal/HAOS-App/HAOS-API/bin/Debug/net9.0/MySqlConnector.dll
-/Users/williamcouture/Personal/HAOS-App/HAOS-API/bin/Debug/net9.0/Pomelo.EntityFrameworkCore.MySql.dll
 /Users/williamcouture/Personal/HAOS-App/HAOS-API/bin/Debug/net9.0/Swashbuckle.AspNetCore.Swagger.dll
 /Users/williamcouture/Personal/HAOS-App/HAOS-API/bin/Debug/net9.0/Swashbuckle.AspNetCore.SwaggerGen.dll
 /Users/williamcouture/Personal/HAOS-App/HAOS-API/bin/Debug/net9.0/Swashbuckle.AspNetCore.SwaggerUI.dll
@@ -133,3 +130,5 @@
 /Users/williamcouture/Personal/HAOS-App/HAOS-API/bin/Debug/net9.0/zh-Hans/Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
 /Users/williamcouture/Personal/HAOS-App/HAOS-API/bin/Debug/net9.0/zh-Hant/Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
 /Users/williamcouture/Personal/HAOS-App/HAOS-API/obj/Debug/net9.0/HAOS-API.sourcelink.json
+/Users/williamcouture/Personal/HAOS-App/HAOS-API/bin/Debug/net9.0/MySqlConnector.dll
+/Users/williamcouture/Personal/HAOS-App/HAOS-API/bin/Debug/net9.0/Pomelo.EntityFrameworkCore.MySql.dll

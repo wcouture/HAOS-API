@@ -3,7 +3,8 @@ using Microsoft.EntityFrameworkCore;
 namespace HAOS.Models;
 
 public class TrainingDb : DbContext {
-    static readonly string connectionString = "Server=localhost;Port=3306;Uid=dev;Password=devpass;Database=test";
+    public static readonly string connectionString = "Server=localhost; User ID=dev; Password=devpass; Database=test";
+    public TrainingDb() {}
     public TrainingDb(DbContextOptions options) : base (options) {}
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
