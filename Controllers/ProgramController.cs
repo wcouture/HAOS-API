@@ -87,6 +87,10 @@ public class ProgramController : IProgramController
         {
             return Results.Conflict(ex.Message);
         }
+        catch (KeyNotFoundException ex)
+        {
+            return Results.NotFound(ex.Message);
+        }
     }
     public async Task<IResult> DeleteProgramSegment(int programId, int id)
     {
