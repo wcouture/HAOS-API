@@ -6,15 +6,15 @@ namespace HAOS.Controllers;
 public class ProgramController : IProgramController
 {
     private readonly IProgramService _programService;
-    // private readonly IProgramSegmentService _programSegmentService;
+    private readonly IProgramSegmentService _programSegmentService;
     // private readonly IProgramDayService _programDayService;
     // private readonly IProgramCircuitService _programCircuitService;
     // private readonly IWorkoutService _workoutService;
 
-    public ProgramController(IProgramService programService)
+    public ProgramController(IProgramService programService, IProgramSegmentService programSegmentService)
     {
         _programService = programService;
-        // _programSegmentService = programSegmentService;
+        _programSegmentService = programSegmentService;
         // _programDayService = programDayService;
         // _programCircuitService = programCircuitService;
         // _workoutService = workoutService;
@@ -43,7 +43,7 @@ public class ProgramController : IProgramController
         try
         {
             var newProgram = await _programService.AddProgram(program);
-            return Results.Created($"/api/programs/{newProgram.Id}", newProgram);
+            return Results.Created($"/programs/find/{newProgram.Id}", newProgram);
         }
         catch (DbConflictException ex)
         {
@@ -76,25 +76,65 @@ public class ProgramController : IProgramController
     }
 
     // Program Segment CRUD
-    public Task<IResult> AddProgramSegment(ProgramSegment programSegment, int programId)
+    public async Task<IResult> AddProgramSegment(ProgramSegment programSegment, int programId)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var newSegment = await _programSegmentService.AddProgramSegment(programSegment, programId);
+            return Results.Created($"/segments/find/{newSegment.Id}", newSegment);
+        }
+        catch (DbConflictException ex)
+        {
+            return Results.Conflict(ex.Message);
+        }
     }
-    public Task<IResult> DeleteProgramSegment(int id)
+    public async Task<IResult> DeleteProgramSegment(int programId, int id)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var deletedSegment = await _programSegmentService.DeleteProgramSegment(programId, id);
+            return Results.Ok(deletedSegment);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return Results.NotFound(ex.Message);
+        }
     }
-    public Task<IResult> GetProgramSegmentById(int id)
+    public async Task<IResult> GetProgramSegmentById(int id)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var segment = await _programSegmentService.GetProgramSegment(id);
+            return Results.Ok(segment);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return Results.NotFound(ex.Message);
+        }
     }
-    public Task<IResult> GetProgramSegments(int programId)
+    public async Task<IResult> GetProgramSegments(int programId)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var segments = await _programSegmentService.GetProgramSegments(programId);
+            return Results.Ok(segments);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return Results.NotFound(ex.Message);
+        }
     }
-    public Task<IResult> UpdateProgramSegment(ProgramSegment programSegment, int id)
+    public async Task<IResult> UpdateProgramSegment(ProgramSegment programSegment, int id)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var updatedSegment = await _programSegmentService.UpdateProgramSegment(programSegment, id);
+            return Results.Ok(updatedSegment);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return Results.NotFound(ex.Message);
+        }
     }
 
     // Program Day CRUD

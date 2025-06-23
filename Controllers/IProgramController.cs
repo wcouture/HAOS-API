@@ -16,7 +16,7 @@ public interface IProgramController
     Task<IResult> GetProgramSegmentById(int id);
     Task<IResult> AddProgramSegment(ProgramSegment programSegment, int programId);
     Task<IResult> UpdateProgramSegment(ProgramSegment programSegment, int id);
-    Task<IResult> DeleteProgramSegment(int id);
+    Task<IResult> DeleteProgramSegment(int programId, int id);
 
     // Program Day Data
     Task<IResult> GetProgramDays(int segmentId);

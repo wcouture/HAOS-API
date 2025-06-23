@@ -29,6 +29,8 @@ public class ProgramService : IProgramService
             throw new DbConflictException("Program with the same title already exists.");
         }
 
+        program.Segments ??= [];
+
         var result = await _context.ProgramData.AddAsync(program);
         await _context.SaveChangesAsync();
         return result.Entity;
