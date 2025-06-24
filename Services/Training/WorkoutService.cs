@@ -1,6 +1,7 @@
-using HAOS.Models;
-using HAOS.Services;
+using HAOS.Models.Training;
 using Microsoft.EntityFrameworkCore;
+
+namespace HAOS.Services.Training;
 
 public class WorkoutService : IWorkoutService
 {

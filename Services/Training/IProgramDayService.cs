@@ -1,5 +1,5 @@
-using HAOS.Models;
-namespace HAOS.Services;
+using HAOS.Models.Training;
+namespace HAOS.Services.Training;
 
 public interface IProgramDayService
 {

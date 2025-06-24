@@ -1,7 +1,7 @@
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace HAOS.Models;
+namespace HAOS.Models.Training;
+
 public class Circuit {
     [Key]
     public int Id { get; set; }

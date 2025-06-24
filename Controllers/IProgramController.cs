@@ -1,4 +1,4 @@
-using HAOS.Models;
+using HAOS.Models.Training;
 
 namespace HAOS.Controllers;
 

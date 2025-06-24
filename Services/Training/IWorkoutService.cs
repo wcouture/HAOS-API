@@ -1,6 +1,6 @@
-using HAOS.Models;
+using HAOS.Models.Training;
 
-namespace HAOS.Services;
+namespace HAOS.Services.Training;
 
 public interface IWorkoutService
 {

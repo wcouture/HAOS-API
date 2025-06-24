@@ -1,6 +1,7 @@
-using HAOS.Models;
-using HAOS.Services;
+using HAOS.Models.Training;
 using Microsoft.EntityFrameworkCore;
+
+namespace HAOS.Services.Training;
 
 public class ProgramService : IProgramService
 {
@@ -87,7 +88,7 @@ public class ProgramService : IProgramService
 
         existingProgram.Title = program.Title;
         existingProgram.Subtitle = program.Subtitle;
-        
+
         await _context.SaveChangesAsync();
         return existingProgram;
     }

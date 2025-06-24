@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 
-namespace HAOS.Models;
+namespace HAOS.Models.Training;
 
 public class TrainingDb : DbContext {
     public static readonly string connectionString = "Server=localhost; User ID=dev; Password=devpass; Database=test";

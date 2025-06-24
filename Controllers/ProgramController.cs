@@ -1,5 +1,5 @@
-using HAOS.Models;
-using HAOS.Services;
+using HAOS.Models.Training;
+using HAOS.Services.Training;
 
 namespace HAOS.Controllers;
 

@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace HAOS.Models;
+namespace HAOS.Models.Training;
 
 public class ProgramDay {
     [Key]

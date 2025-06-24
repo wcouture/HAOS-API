@@ -1,7 +1,7 @@
-using HAOS.Models;
+using HAOS.Models.Training;
 using Microsoft.EntityFrameworkCore;
 
-namespace HAOS.Services;
+namespace HAOS.Services.Training;
 
 public class ProgramCircuitService : IProgramCircuitService
 {

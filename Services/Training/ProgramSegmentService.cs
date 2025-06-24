@@ -1,6 +1,7 @@
-using HAOS.Models;
-using HAOS.Services;
+using HAOS.Models.Training;
 using Microsoft.EntityFrameworkCore;
+
+namespace HAOS.Services.Training;
 
 public class ProgramSegmentService : IProgramSegmentService
 {
@@ -48,7 +49,7 @@ public class ProgramSegmentService : IProgramSegmentService
     public async Task<List<ProgramSegment>> GetProgramSegments(int programId)
     {
         var program = await _context.ProgramData.Include(p => p.Segments).FirstOrDefaultAsync(p => p.Id == programId) ?? throw new KeyNotFoundException("Program not found.");
-        
+
         return program.Segments ?? [];
     }
 
@@ -58,7 +59,7 @@ public class ProgramSegmentService : IProgramSegmentService
 
         existingSegment.Title = programSegment.Title;
         existingSegment.Subtitle = programSegment.Subtitle;
-        
+
         await _context.SaveChangesAsync();
         return existingSegment;
     }

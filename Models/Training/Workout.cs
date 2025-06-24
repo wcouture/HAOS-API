@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace HAOS.Models;
+namespace HAOS.Models.Training;
 public class Workout {
     [Key]
     public int Id { get; set; }

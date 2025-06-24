@@ -1,15 +1,19 @@
-using Microsoft.EntityFrameworkCore;
-using HAOS.Models;
-using HAOS.Services;
+using HAOS.Models.Auth;
+using HAOS.Models.Training;
+using HAOS.Services.Training;
+using HAOS.Services.Auth;
 using HAOS.Controllers;
-using System.Text;
+
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+builder.Services.AddDbContext<EncryptionKeyDb>();
 builder.Services.AddDbContext<TrainingDb>();
+
+
 builder.Services.AddScoped<IProgramService, ProgramService>();
 builder.Services.AddScoped<IProgramSegmentService, ProgramSegmentService>();
 builder.Services.AddScoped<IProgramDayService, ProgramDayService>();
@@ -17,6 +21,7 @@ builder.Services.AddScoped<IProgramCircuitService, ProgramCircuitService>();
 builder.Services.AddScoped<IWorkoutService, WorkoutService>();
 
 builder.Services.AddScoped<IProgramController, ProgramController>();
+builder.Services.AddScoped<IEncryptionService, RsaEncryptionService>();
 
 builder.Services.AddSwaggerGen(c => {
     c.SwaggerDoc("v2", new Microsoft.OpenApi.Models.OpenApiInfo {
@@ -48,22 +53,44 @@ app.UseHttpsRedirection();
 // Custom authentication
 app.Use((context, next) =>
 {
-    var _dbContext = context.RequestServices.GetRequiredService<TrainingDb>();
-
-
-    var authToken = context.Request.Headers["Authorization"];
-    // Check if authToken is valid here
-
-    if (string.IsNullOrEmpty(authToken))
+    // Skip authentication for public key requests
+    if (context.Request.Path == "/rsa/key")
     {
+        return next(context);
+    }
+    var _encryptionService = context.RequestServices.GetRequiredService<IEncryptionService>();
+
+    // Read in auth token from header, assume encrypted
+    var encryptedAuthToken = context.Request.Headers["Authorization"];
+    var authToken = string.Empty;
+    if (!string.IsNullOrEmpty(encryptedAuthToken))
+    {
+        // Decrypt auth token
+        authToken = _encryptionService.Decrypt(encryptedAuthToken!);
+    }
+    else
+    {
+        // Missing auth token
         context.Response.StatusCode = 401;
         context.Response.WriteAsync("Missing Authorization header");
 
         return Task.CompletedTask;
     }
 
-    // Continue on if all is valid
-    return next(context);
+    // Check if authToken is valid here
+    if (authToken == "HAOSAPIauthorizationToken")
+    {
+        // Valid auth token
+        return next(context);
+    }
+    else
+    {
+        // Invalid auth token
+        context.Response.StatusCode = 401;
+        context.Response.WriteAsync("Invalid Authorization header");
+
+        return Task.CompletedTask;
+    }
 });
 
 
@@ -71,6 +98,8 @@ app.MapGet("/", () =>
 {
     return "Welcome to HAOS App API";
 });
+
+app.MapGet("/rsa/key", (IEncryptionService encryptionService) => encryptionService.PublicKey);
 
 // Training Programs
 app.MapGet("/programs/all", async (IProgramController programController) => await programController.GetPrograms());
