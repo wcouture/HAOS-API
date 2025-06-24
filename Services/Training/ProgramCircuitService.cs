@@ -40,7 +40,14 @@ public class ProgramCircuitService : IProgramCircuitService
 
     public async Task<List<Circuit>> GetCircuits(int programDayId)
     {
-        var program = await _context.ProgramDayData.Include(p => p.Circuits).FirstOrDefaultAsync(p => p.Id == programDayId) ?? throw new KeyNotFoundException("Program day not found.");
+        var program = await _context.ProgramDayData.Include(p => p.Circuits).Where(p => p.Id == programDayId).FirstOrDefaultAsync(p => p.Id == programDayId) ?? throw new KeyNotFoundException("Program day not found.");
+
+        foreach (var circuit in program.Circuits ?? [])
+        {
+            var circ = await GetCircuit(circuit.Id);
+            circuit.Workouts = circ.Workouts;
+        }
+
         return program.Circuits ?? [];
     }
 
