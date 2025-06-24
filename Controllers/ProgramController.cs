@@ -21,7 +21,7 @@ public class ProgramController : IProgramController
     }
 
     // Program CRUD
-     public async Task<IResult> GetProgramById(int id)
+    public async Task<IResult> GetProgramById(int id)
     {
         try
         {
@@ -182,66 +182,163 @@ public class ProgramController : IProgramController
             return Results.NotFound(ex.Message);
         }
     }
-    public Task<IResult> GetProgramDays(int segmentId)
+    public async Task<IResult> GetProgramDays(int segmentId)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var days = await _programDayService.GetProgramDays(segmentId);
+            return Results.Ok(days);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return Results.NotFound(ex.Message);
+        }
     }
-    public Task<IResult> UpdateProgramDay(ProgramDay programDay, int id)
+    public async Task<IResult> UpdateProgramDay(ProgramDay programDay, int id)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var updatedDay = await _programDayService.UpdateProgramDay(programDay, id);
+            return Results.Ok(updatedDay);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return Results.NotFound(ex.Message);
+        }
     }
 
     // Program Circuit CRUD
-    public Task<IResult> AddCircuit(Circuit circuit, int dayId)
+    public async Task<IResult> AddCircuit(Circuit circuit, int dayId)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var newCircuit = await _programCircuitService.CreateCircuit(circuit, dayId);
+            return Results.Created($"/circuits/find/{newCircuit.Id}", newCircuit);
+        }
+        catch (DbConflictException ex)
+        {
+            return Results.Conflict(ex.Message);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return Results.NotFound(ex.Message);
+        }
     }
-    public Task<IResult> DeleteCircuit(int dayId, int id)
+    public async Task<IResult> DeleteCircuit(int dayId, int id)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var deletedCircuit = await _programCircuitService.DeleteCircuit(dayId, id);
+            return Results.Ok(deletedCircuit);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return Results.NotFound(ex.Message);
+        }
     }
-    public Task<IResult> GetCircuitById(int id)
+    public async Task<IResult> GetCircuitById(int id)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var circuit = await _programCircuitService.GetCircuit(id);
+            return Results.Ok(circuit);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return Results.NotFound(ex.Message);
+        }
     }
-    public Task<IResult> GetCircuits(int dayId)
+    public async Task<IResult> GetCircuits(int dayId)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var circuits = await _programCircuitService.GetCircuits(dayId);
+            return Results.Ok(circuits);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return Results.NotFound(ex.Message);
+        }
     }
-    public Task<IResult> UpdateCircuit(Circuit circuit, int id)
+    public async Task<IResult> AddWorkout(int circuitId, int workoutId)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var circuit = await _programCircuitService.AddWorkout(circuitId, workoutId);
+            return Results.Ok(circuit);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return Results.NotFound(ex.Message);
+        }
     }
-    public Task<IResult> AddWorkout(int circuitId, int workoutId)
+    public async Task<IResult> RemoveWorkout(int circuitId, int workoutId)
     {
-        throw new NotImplementedException();
-    }
-    public Task<IResult> RemoveWorkout(int circuitId, int workoutId)
-    {
-        throw new NotImplementedException();
+        try
+        {
+            var circuit = await _programCircuitService.RemoveWorkout(circuitId, workoutId);
+            return Results.Ok(circuit);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return Results.NotFound(ex.Message);
+        }
     }
 
 
     // Exercise CRUD
-    public Task<IResult> AddExercise(Workout exercise)
+    public async Task<IResult> AddExercise(Workout exercise)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var newExercise = await _workoutService.CreateWorkout(exercise);
+            return Results.Created($"/workouts/find/{newExercise.Id}", newExercise);
+        }
+        catch (DbConflictException ex)
+        {
+            return Results.Conflict(ex.Message);
+        }
     }
-    public Task<IResult> DeleteExercise(int id)
+    public async Task<IResult> DeleteExercise(int id)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var deletedExercise = await _workoutService.DeleteWorkout(id);
+            return Results.Ok(deletedExercise);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return Results.NotFound(ex.Message);
+        }
     }
-    public Task<IResult> GetExerciseById(int id)
+    public async Task<IResult> GetExerciseById(int id)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var exercise = await _workoutService.GetWorkout(id);
+            return Results.Ok(exercise);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return Results.NotFound(ex.Message);
+        }
     }
-    public Task<IResult> GetExercises()
+    public async Task<IResult> GetExercises()
     {
-        throw new NotImplementedException();
+        var exercises = await _workoutService.GetWorkouts();
+        return Results.Ok(exercises);
     }
-    public Task<IResult> UpdateExercise(Workout exercise, int id)
+    public async Task<IResult> UpdateExercise(Workout exercise, int id)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var updatedExercise = await _workoutService.UpdateWorkout(exercise, id);
+            return Results.Ok(updatedExercise);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return Results.NotFound(ex.Message);
+        }
     }
 
     

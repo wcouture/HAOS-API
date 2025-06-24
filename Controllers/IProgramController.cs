@@ -29,7 +29,6 @@ public interface IProgramController
     Task<IResult> GetCircuits(int dayId);
     Task<IResult> GetCircuitById(int id);
     Task<IResult> AddCircuit(Circuit circuit, int dayId);
-    Task<IResult> UpdateCircuit(Circuit circuit, int id);
     Task<IResult> DeleteCircuit(int dayId, int id);
     Task<IResult> RemoveWorkout(int circuitId, int workoutId);
     Task<IResult> AddWorkout(int circuitId, int workoutId);

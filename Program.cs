@@ -145,7 +145,6 @@ app.MapGet("/days/find/{id}", async (IProgramController programController, int i
 app.MapGet("/circuits/all/{programDayId}", async (IProgramController programController, int programDayId) => await programController.GetCircuits(programDayId));
 app.MapPost("/circuits/add/{programDayId}", async (IProgramController programController, Circuit newCircuit, int programDayId) => await programController.AddCircuit(newCircuit, programDayId));
 app.MapDelete("/circuits/delete/{programDayId}/{id}", async (IProgramController programController, int programDayId, int id) => await programController.DeleteCircuit(programDayId, id));
-app.MapPut("/circuits/update/{id}", async (IProgramController programController, Circuit updatedCircuit, int id) => await programController.UpdateCircuit(updatedCircuit, id));
 app.MapGet("/circuits/find/{id}", async (IProgramController programController, int id) => await programController.GetCircuitById(id));
 app.MapPost("/circuits/workout/add/{circuitId}", async (IProgramController programController, int circuitId, int workoutId) => await programController.AddWorkout(circuitId, workoutId));
 app.MapDelete("/circuits/workout/remove/{circuitId}", async (IProgramController programController, int circuitId, int workoutId) => await programController.RemoveWorkout(circuitId, workoutId));
