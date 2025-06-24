@@ -152,7 +152,7 @@ app.MapDelete("/circuits/workout/remove/{circuitId}", async (IProgramController 
 // Workouts
 app.MapGet("/workouts/all", async (IProgramController programController) => await programController.GetExercises());
 app.MapPost("/workouts/add", async (IProgramController programController, Workout newWorkout) => await programController.AddExercise(newWorkout));
-app.MapDelete("/workouts/delete/{id}", async (IProgramController programController, int circuitId, int id) => await programController.DeleteExercise(id));
+app.MapDelete("/workouts/delete/{id}", async (IProgramController programController, int id) => await programController.DeleteExercise(id));
 app.MapPut("/workouts/update/{id}", async (IProgramController programController, Workout updatedWorkout, int id) => await programController.UpdateExercise(updatedWorkout, id));
 app.MapGet("/workouts/find/{id}", async (IProgramController programController, int id) => await programController.GetExerciseById(id));
 
