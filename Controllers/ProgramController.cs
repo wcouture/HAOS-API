@@ -223,7 +223,7 @@ public class ProgramController : IProgramController
 
 
     // Exercise CRUD
-    public Task<IResult> AddExercise(Workout exercise, int circuitId)
+    public Task<IResult> AddExercise(Workout exercise)
     {
         throw new NotImplementedException();
     }
@@ -235,7 +235,7 @@ public class ProgramController : IProgramController
     {
         throw new NotImplementedException();
     }
-    public Task<IResult> GetExercises(int circuitId)
+    public Task<IResult> GetExercises()
     {
         throw new NotImplementedException();
     }

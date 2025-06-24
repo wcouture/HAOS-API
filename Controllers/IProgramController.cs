@@ -35,9 +35,9 @@ public interface IProgramController
     Task<IResult> AddWorkout(int circuitId, int workoutId);
 
     // Workout Data
-    Task<IResult> GetExercises(int circuitId);
+    Task<IResult> GetExercises();
     Task<IResult> GetExerciseById(int id);
-    Task<IResult> AddExercise(Workout exercise, int circuitId);
+    Task<IResult> AddExercise(Workout exercise);
     Task<IResult> UpdateExercise(Workout exercise, int id);
     Task<IResult> DeleteExercise(int id);
 

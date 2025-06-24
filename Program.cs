@@ -23,11 +23,23 @@ builder.Services.AddScoped<IWorkoutService, WorkoutService>();
 builder.Services.AddScoped<IProgramController, ProgramController>();
 builder.Services.AddScoped<IEncryptionService, RsaEncryptionService>();
 
-builder.Services.AddSwaggerGen(c => {
-    c.SwaggerDoc("v2", new Microsoft.OpenApi.Models.OpenApiInfo {
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v2", new Microsoft.OpenApi.Models.OpenApiInfo
+    {
         Title = "HAOS Training App API Backend",
         Description = "API for retrieving program and user data for the HAOS training app.",
         Version = "v2"
+    });
+    c.TagActionsBy(d =>
+    {
+        var rootSegment = d.RelativePath?.Split("/")[0];
+        if (string.IsNullOrEmpty(rootSegment))
+        {
+            rootSegment = "Home";
+        }
+        rootSegment = rootSegment[0].ToString().ToUpper() + rootSegment.Substring(1);
+        return new[] { rootSegment };
     });
 });
 
@@ -123,10 +135,27 @@ app.MapPut("/segments/update/{id}", async (IProgramController programController,
 app.MapGet("/segments/find/{id}", async (IProgramController programController, int id) => await programController.GetProgramSegmentById(id));
 
 // Program Days
+app.MapGet("/days/all/{segmentId}", async (IProgramController programController, int segmentId) => await programController.GetProgramDays(segmentId));
+app.MapPost("/days/add/{segmentId}", async (IProgramController programController, ProgramDay newProgramDay, int segmentId) => await programController.AddProgramDay(newProgramDay, segmentId));
+app.MapDelete("/days/delete/{segmentId}/{id}", async (IProgramController programController, int segmentId, int id) => await programController.DeleteProgramDay(segmentId, id));
+app.MapPut("/days/update/{id}", async (IProgramController programController, ProgramDay updatedProgramDay, int id) => await programController.UpdateProgramDay(updatedProgramDay, id));
+app.MapGet("/days/find/{id}", async (IProgramController programController, int id) => await programController.GetProgramDayById(id));
 
 // Circuits
+app.MapGet("/circuits/all/{programDayId}", async (IProgramController programController, int programDayId) => await programController.GetCircuits(programDayId));
+app.MapPost("/circuits/add/{programDayId}", async (IProgramController programController, Circuit newCircuit, int programDayId) => await programController.AddCircuit(newCircuit, programDayId));
+app.MapDelete("/circuits/delete/{programDayId}/{id}", async (IProgramController programController, int programDayId, int id) => await programController.DeleteCircuit(programDayId, id));
+app.MapPut("/circuits/update/{id}", async (IProgramController programController, Circuit updatedCircuit, int id) => await programController.UpdateCircuit(updatedCircuit, id));
+app.MapGet("/circuits/find/{id}", async (IProgramController programController, int id) => await programController.GetCircuitById(id));
+app.MapPost("/circuits/workout/add/{circuitId}", async (IProgramController programController, int circuitId, int workoutId) => await programController.AddWorkout(circuitId, workoutId));
+app.MapDelete("/circuits/workout/remove/{circuitId}", async (IProgramController programController, int circuitId, int workoutId) => await programController.RemoveWorkout(circuitId, workoutId));
 
 // Workouts
+app.MapGet("/workouts/all", async (IProgramController programController) => await programController.GetExercises());
+app.MapPost("/workouts/add", async (IProgramController programController, Workout newWorkout) => await programController.AddExercise(newWorkout));
+app.MapDelete("/workouts/delete/{id}", async (IProgramController programController, int circuitId, int id) => await programController.DeleteExercise(id));
+app.MapPut("/workouts/update/{id}", async (IProgramController programController, Workout updatedWorkout, int id) => await programController.UpdateExercise(updatedWorkout, id));
+app.MapGet("/workouts/find/{id}", async (IProgramController programController, int id) => await programController.GetExerciseById(id));
 
 app.MapDelete("/data/clear", async(TrainingDb programDb) => {
     await programDb.Database.EnsureDeletedAsync();
