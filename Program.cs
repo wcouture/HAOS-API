@@ -99,7 +99,12 @@ app.MapGet("/", () =>
     return "Welcome to HAOS App API";
 });
 
-app.MapGet("/rsa/key", (IEncryptionService encryptionService) => encryptionService.PublicKey);
+app.MapGet("/rsa/key", (IEncryptionService encryptionService) =>
+{
+    var publicKey = encryptionService.PublicKey;
+    var XMLPublicKey = encryptionService.PublicKeyXML;
+    return Results.Ok(new { publicKey, XMLPublicKey });
+});
 
 // Training Programs
 app.MapGet("/programs/all", async (IProgramController programController) => await programController.GetPrograms());

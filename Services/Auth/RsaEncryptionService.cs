@@ -7,7 +7,18 @@ namespace HAOS.Services.Auth;
 
 public class RsaEncryptionService : IEncryptionService
 {
-    public string PublicKey => _publicKey;
+    public string PublicKey
+    {
+        get
+        {
+            using RSA rsa = RSA.Create();
+            rsa.FromXmlString(_publicKey);
+            return Convert.ToBase64String(rsa.ExportRSAPublicKey());
+        }
+
+    }
+
+    public string PublicKeyXML => _publicKey;
     private string _publicKey;
     private string _privateKey;
 

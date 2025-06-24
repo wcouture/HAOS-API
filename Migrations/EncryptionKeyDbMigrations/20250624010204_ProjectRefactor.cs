@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace HAOS_API.Migrations.EncryptionKeyDbMigrations
 {
     /// <inheritdoc />
-    public partial class AddEncryptionKeys : Migration
+    public partial class ProjectRefactor : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
