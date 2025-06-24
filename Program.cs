@@ -19,6 +19,7 @@ builder.Services.AddScoped<IProgramSegmentService, ProgramSegmentService>();
 builder.Services.AddScoped<IProgramDayService, ProgramDayService>();
 builder.Services.AddScoped<IProgramCircuitService, ProgramCircuitService>();
 builder.Services.AddScoped<IWorkoutService, WorkoutService>();
+builder.Services.AddScoped<IExerciseService, ExerciseService>();
 
 builder.Services.AddScoped<IProgramController, ProgramController>();
 builder.Services.AddScoped<IEncryptionService, RsaEncryptionService>();
@@ -146,15 +147,20 @@ app.MapGet("/circuits/all/{programDayId}", async (IProgramController programCont
 app.MapPost("/circuits/add/{programDayId}", async (IProgramController programController, Circuit newCircuit, int programDayId) => await programController.AddCircuit(newCircuit, programDayId));
 app.MapDelete("/circuits/delete/{programDayId}/{id}", async (IProgramController programController, int programDayId, int id) => await programController.DeleteCircuit(programDayId, id));
 app.MapGet("/circuits/find/{id}", async (IProgramController programController, int id) => await programController.GetCircuitById(id));
-app.MapPost("/circuits/workout/add/{circuitId}", async (IProgramController programController, int circuitId, int workoutId) => await programController.AddWorkout(circuitId, workoutId));
-app.MapDelete("/circuits/workout/remove/{circuitId}", async (IProgramController programController, int circuitId, int workoutId) => await programController.RemoveWorkout(circuitId, workoutId));
 
 // Workouts
-app.MapGet("/workouts/all", async (IProgramController programController) => await programController.GetExercises());
-app.MapPost("/workouts/add", async (IProgramController programController, Workout newWorkout) => await programController.AddExercise(newWorkout));
-app.MapDelete("/workouts/delete/{id}", async (IProgramController programController, int id) => await programController.DeleteExercise(id));
-app.MapPut("/workouts/update/{id}", async (IProgramController programController, Workout updatedWorkout, int id) => await programController.UpdateExercise(updatedWorkout, id));
-app.MapGet("/workouts/find/{id}", async (IProgramController programController, int id) => await programController.GetExerciseById(id));
+app.MapGet("/workouts/all/{circuitId}", async (IProgramController programController, int circuitId) => await programController.GetWorkouts(circuitId));
+app.MapPost("/workouts/add/{circuitId}", async (IProgramController programController, Workout newWorkout, int circuitId) => await programController.AddWorkout(newWorkout, circuitId));
+app.MapDelete("/workouts/delete/{circuitId}/{id}", async (IProgramController programController, int circuitId, int id) => await programController.DeleteWorkout(circuitId, id));
+app.MapPut("/workouts/update/{id}", async (IProgramController programController, Workout updatedWorkout, int id) => await programController.UpdateWorkout(updatedWorkout, id));
+app.MapGet("/workouts/find/{id}", async (IProgramController programController, int id) => await programController.GetWorkoutById(id));
+
+// Exercises
+app.MapGet("/exercises/all", async (IProgramController programController) => await programController.GetExercises());
+app.MapPost("/exercises/add", async (IProgramController programController, Exercise newExercise) => await programController.AddExercise(newExercise));
+app.MapDelete("/exercises/delete/{id}", async (IProgramController programController, int id) => await programController.DeleteExercise(id));
+app.MapPut("/exercises/update/{id}", async (IProgramController programController, Exercise updatedExercise, int id) => await programController.UpdateExercise(updatedExercise, id));
+app.MapGet("/exercises/find/{id}", async (IProgramController programController, int id) => await programController.GetExerciseById(id));
 
 app.MapDelete("/data/clear", async(TrainingDb programDb) => {
     await programDb.Database.EnsureDeletedAsync();

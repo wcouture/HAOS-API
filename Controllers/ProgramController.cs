@@ -10,14 +10,16 @@ public class ProgramController : IProgramController
     private readonly IProgramDayService _programDayService;
     private readonly IProgramCircuitService _programCircuitService;
     private readonly IWorkoutService _workoutService;
+    private readonly IExerciseService _exerciseService;
 
-    public ProgramController(IProgramService programService, IProgramSegmentService programSegmentService, IProgramDayService programDayService, IProgramCircuitService programCircuitService, IWorkoutService workoutService)
+    public ProgramController(IProgramService programService, IProgramSegmentService programSegmentService, IProgramDayService programDayService, IProgramCircuitService programCircuitService, IWorkoutService workoutService, IExerciseService exerciseService)
     {
         _programService = programService;
         _programSegmentService = programSegmentService;
         _programDayService = programDayService;
         _programCircuitService = programCircuitService;
         _workoutService = workoutService;
+        _exerciseService = exerciseService;
     }
 
     // Program CRUD
@@ -260,50 +262,29 @@ public class ProgramController : IProgramController
             return Results.NotFound(ex.Message);
         }
     }
-    public async Task<IResult> AddWorkout(int circuitId, int workoutId)
-    {
-        try
-        {
-            var circuit = await _programCircuitService.AddWorkout(circuitId, workoutId);
-            return Results.Ok(circuit);
-        }
-        catch (KeyNotFoundException ex)
-        {
-            return Results.NotFound(ex.Message);
-        }
-    }
-    public async Task<IResult> RemoveWorkout(int circuitId, int workoutId)
-    {
-        try
-        {
-            var circuit = await _programCircuitService.RemoveWorkout(circuitId, workoutId);
-            return Results.Ok(circuit);
-        }
-        catch (KeyNotFoundException ex)
-        {
-            return Results.NotFound(ex.Message);
-        }
-    }
 
-
-    // Exercise CRUD
-    public async Task<IResult> AddExercise(Workout exercise)
+    // Workout CRUD
+    public async Task<IResult> AddWorkout(Workout workout, int circuitId)
     {
         try
         {
-            var newExercise = await _workoutService.CreateWorkout(exercise);
+            var newExercise = await _workoutService.CreateWorkout(workout, circuitId);
             return Results.Created($"/workouts/find/{newExercise.Id}", newExercise);
         }
         catch (DbConflictException ex)
         {
             return Results.Conflict(ex.Message);
         }
+        catch (KeyNotFoundException ex)
+        {
+            return Results.NotFound(ex.Message);
+        }
     }
-    public async Task<IResult> DeleteExercise(int id)
+    public async Task<IResult> DeleteWorkout(int circuitId, int id)
     {
         try
         {
-            var deletedExercise = await _workoutService.DeleteWorkout(id);
+            var deletedExercise = await _workoutService.DeleteWorkout(circuitId, id);
             return Results.Ok(deletedExercise);
         }
         catch (KeyNotFoundException ex)
@@ -311,7 +292,7 @@ public class ProgramController : IProgramController
             return Results.NotFound(ex.Message);
         }
     }
-    public async Task<IResult> GetExerciseById(int id)
+    public async Task<IResult> GetWorkoutById(int id)
     {
         try
         {
@@ -323,16 +304,23 @@ public class ProgramController : IProgramController
             return Results.NotFound(ex.Message);
         }
     }
-    public async Task<IResult> GetExercises()
-    {
-        var exercises = await _workoutService.GetWorkouts();
-        return Results.Ok(exercises);
-    }
-    public async Task<IResult> UpdateExercise(Workout exercise, int id)
+    public async Task<IResult> GetWorkouts(int circuitId)
     {
         try
         {
-            var updatedExercise = await _workoutService.UpdateWorkout(exercise, id);
+            var workouts = await _workoutService.GetWorkouts(circuitId);
+            return Results.Ok(workouts);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return Results.NotFound(ex.Message);
+        }
+    }
+    public async Task<IResult> UpdateWorkout(Workout workout, int id)
+    {
+        try
+        {
+            var updatedExercise = await _workoutService.UpdateWorkout(workout, id);
             return Results.Ok(updatedExercise);
         }
         catch (KeyNotFoundException ex)
@@ -341,5 +329,62 @@ public class ProgramController : IProgramController
         }
     }
 
-    
+    // Exercise CRUD
+    public async Task<IResult> AddExercise(Exercise exercise)
+    {
+        try
+        {
+            var newExercise = await _exerciseService.CreateExercise(exercise);
+            return Results.Created($"/exercises/find/{newExercise.Id}", newExercise);
+        }
+        catch (DbConflictException ex)
+        {
+            return Results.Conflict(ex.Message);
+        }
+    }
+
+    public async Task<IResult> GetExercises()
+    {
+        var exercises = await _exerciseService.GetExercises();
+        return Results.Ok(exercises);
+    }
+
+    public async Task<IResult> GetExerciseById(int id)
+    {
+        try
+        {
+            var exercise = await _exerciseService.GetExercise(id);
+            return Results.Ok(exercise);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return Results.NotFound(ex.Message);
+        }
+    }
+
+    public async Task<IResult> UpdateExercise(Exercise exercise, int id)
+    {
+        try
+        {
+            var updatedExercise = await _exerciseService.UpdateExercise(exercise, id);
+            return Results.Ok(updatedExercise);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return Results.NotFound(ex.Message);
+        }
+    }
+
+    public async Task<IResult> DeleteExercise(int id)
+    {
+        try
+        {
+            var deletedExercise = await _exerciseService.DeleteExercise(id);
+            return Results.Ok(deletedExercise);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return Results.NotFound(ex.Message);
+        }
+    }
 }

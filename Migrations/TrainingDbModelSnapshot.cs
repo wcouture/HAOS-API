@@ -39,6 +39,25 @@ namespace HAOS_API.Migrations
                     b.ToTable("CircuitData");
                 });
 
+            modelBuilder.Entity("HAOS.Models.Training.Exercise", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("DemoUrl")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ExerciseData");
+                });
+
             modelBuilder.Entity("HAOS.Models.Training.ProgramDay", b =>
                 {
                     b.Property<int>("Id")
@@ -117,8 +136,8 @@ namespace HAOS_API.Migrations
                     b.Property<int?>("CircuitId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Label")
-                        .HasColumnType("longtext");
+                    b.Property<int?>("ExerciseRefId")
+                        .HasColumnType("int");
 
                     b.Property<int>("RecommendedReps")
                         .HasColumnType("int");
@@ -132,6 +151,8 @@ namespace HAOS_API.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CircuitId");
+
+                    b.HasIndex("ExerciseRefId");
 
                     b.ToTable("WorkoutData");
                 });
@@ -162,6 +183,12 @@ namespace HAOS_API.Migrations
                     b.HasOne("HAOS.Models.Training.Circuit", null)
                         .WithMany("Workouts")
                         .HasForeignKey("CircuitId");
+
+                    b.HasOne("HAOS.Models.Training.Exercise", "ExerciseRef")
+                        .WithMany()
+                        .HasForeignKey("ExerciseRefId");
+
+                    b.Navigation("ExerciseRef");
                 });
 
             modelBuilder.Entity("HAOS.Models.Training.Circuit", b =>

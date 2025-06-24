@@ -30,14 +30,19 @@ public interface IProgramController
     Task<IResult> GetCircuitById(int id);
     Task<IResult> AddCircuit(Circuit circuit, int dayId);
     Task<IResult> DeleteCircuit(int dayId, int id);
-    Task<IResult> RemoveWorkout(int circuitId, int workoutId);
-    Task<IResult> AddWorkout(int circuitId, int workoutId);
 
     // Workout Data
+    Task<IResult> GetWorkouts(int circuitId);
+    Task<IResult> GetWorkoutById(int id);
+    Task<IResult> AddWorkout(Workout workout, int circuitId);
+    Task<IResult> UpdateWorkout(Workout workout, int id);
+    Task<IResult> DeleteWorkout(int circuitId, int id);
+
+    //Exercise Data
     Task<IResult> GetExercises();
     Task<IResult> GetExerciseById(int id);
-    Task<IResult> AddExercise(Workout exercise);
-    Task<IResult> UpdateExercise(Workout exercise, int id);
+    Task<IResult> AddExercise(Exercise exercise);
+    Task<IResult> UpdateExercise(Exercise exercise, int id);
     Task<IResult> DeleteExercise(int id);
 
 }
