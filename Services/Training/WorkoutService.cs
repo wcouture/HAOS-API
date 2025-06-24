@@ -12,6 +12,8 @@ public class WorkoutService : IWorkoutService
     }
     public async Task<Workout> CreateWorkout(Workout workout, int circuitId)
     {
+        var circuit = await _context.CircuitData.Include(c => c.Workouts).FirstOrDefaultAsync(c => c.Id == circuitId) ?? throw new KeyNotFoundException("Circuit not found.");
+
         var existingWorkout = await _context.WorkoutData.FirstOrDefaultAsync(w => w.ExerciseRef == workout.ExerciseRef);
         if (existingWorkout != null)
         {
@@ -19,6 +21,9 @@ public class WorkoutService : IWorkoutService
         }
 
         var result = await _context.WorkoutData.AddAsync(workout);
+
+        circuit.Workouts?.Add(result.Entity);
+
         await _context.SaveChangesAsync();
         return result.Entity;
 
@@ -39,13 +44,20 @@ public class WorkoutService : IWorkoutService
 
     public async Task<Workout> GetWorkout(int id)
     {
-        var workout = await _context.WorkoutData.FirstOrDefaultAsync(w => w.Id == id) ?? throw new KeyNotFoundException("Workout not found.");
+        var workout = await _context.WorkoutData.Include(w => w.ExerciseRef).FirstOrDefaultAsync(w => w.Id == id) ?? throw new KeyNotFoundException("Workout not found.");
         return workout;
     }
 
     public async Task<List<Workout>> GetWorkouts(int circuitId)
     {
         var circuit = await _context.CircuitData.Include(c => c.Workouts).FirstOrDefaultAsync(c => c.Id == circuitId) ?? throw new KeyNotFoundException("Circuit not found.");
+
+        foreach (var workout in circuit.Workouts ?? [])
+        {
+            var work = await GetWorkout(workout.Id);
+            workout.ExerciseRef = work.ExerciseRef;
+        }
+
         return circuit.Workouts ?? [];
     }
 

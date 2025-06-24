@@ -29,6 +29,12 @@ public class ExerciseService : IExerciseService
     {
         var exercise = await _context.ExerciseData.FirstOrDefaultAsync(e => e.Id == id) ?? throw new KeyNotFoundException("Exercise not found.");
         
+        var workouts = await _context.WorkoutData.Include(w => w.ExerciseRef).Where(w => w.ExerciseRef!.Id == id).ToListAsync();
+        foreach (var workout in workouts)
+        {
+            workout.ExerciseRef = null;
+        }
+
         _context.ExerciseData.Remove(exercise);
         await _context.SaveChangesAsync();
         return exercise;
