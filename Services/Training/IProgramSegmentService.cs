@@ -4,7 +4,7 @@ namespace HAOS.Services.Training;
 
 public interface IProgramSegmentService
 {
-    Task<List<ProgramSegment>> GetProgramSegments(int programId);
+    Task<IList<ProgramSegment>> GetProgramSegments(int programId);
     Task<ProgramSegment> GetProgramSegment(int id);
     Task<ProgramSegment> AddProgramSegment(ProgramSegment programSegment, int programId);
     Task<ProgramSegment> UpdateProgramSegment(ProgramSegment programSegment, int id);

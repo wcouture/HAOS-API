@@ -1,3 +1,4 @@
+using System.Text.Json;
 using HAOS.Models.Training;
 using Microsoft.EntityFrameworkCore;
 
@@ -47,8 +48,27 @@ public class ProgramService : IProgramService
 
     public async Task<TrainingProgram> DeleteProgram(int id)
     {
-        var program = await _context.ProgramData.FirstOrDefaultAsync(p => p.Id == id) ?? throw new KeyNotFoundException("Program not found.");
-        _context.ProgramData.Remove(program);
+        var program = await _context.ProgramData.Include(p => p.Segments).FirstOrDefaultAsync(p => p.Id == id) ?? throw new KeyNotFoundException("Program not found.");
+
+        var deletedSegments = program.Segments;
+        var segmentIds = deletedSegments.Select(s => s.Id).ToList();
+
+        var deletedProgramDays = await _context.ProgramDayData.Where(p => segmentIds.Contains(p.SegmentId)).ToListAsync();
+        var dayIds = deletedProgramDays.Select(d => d.Id).ToList();
+
+        var deletedCircuits = await _context.CircuitData.Where(c => dayIds.Contains(c.ProgramDayId)).ToListAsync();
+        var circuitIds = deletedCircuits.Select(c => c.Id).ToList();
+
+        var deletedWorkouts = await _context.WorkoutData.Where(w => circuitIds.Contains(w.CircuitId)).ToListAsync();
+        var workoutIds = deletedWorkouts.Select(w => w.Id).ToList();
+
+        _context.WorkoutData.RemoveRange(deletedWorkouts);
+        _context.CircuitData.RemoveRange(deletedCircuits);
+        _context.ProgramDayData.RemoveRange(deletedProgramDays);
+        _context.SegmentData.RemoveRange(deletedSegments);
+
+        _context.Remove(program);
+
         await _context.SaveChangesAsync();
         return program;
     }

@@ -4,6 +4,7 @@ namespace HAOS.Controllers;
 
 public interface IProgramController
 {
+
     // Top Layer Program Data
     Task<IResult> GetPrograms();
     Task<IResult> GetProgramById(int id);
@@ -30,6 +31,7 @@ public interface IProgramController
     Task<IResult> GetCircuitById(int id);
     Task<IResult> AddCircuit(Circuit circuit, int dayId);
     Task<IResult> DeleteCircuit(int dayId, int id);
+    Task<IResult> UpdateCircuit(Circuit circuit, int circuitId);
 
     // Workout Data
     Task<IResult> GetWorkouts(int circuitId);

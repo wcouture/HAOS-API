@@ -3,6 +3,7 @@ using HAOS.Models.Training;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HAOS_API.Migrations
 {
     [DbContext(typeof(TrainingDb))]
-    partial class TrainingDbModelSnapshot : ModelSnapshot
+    [Migration("20250625164819_RemoveExplicitRelations")]
+    partial class RemoveExplicitRelations
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -72,9 +75,6 @@ namespace HAOS_API.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("ProgramSegmentId")
-                        .HasColumnType("int");
-
                     b.Property<int>("SegmentId")
                         .HasColumnType("int");
 
@@ -86,7 +86,7 @@ namespace HAOS_API.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProgramSegmentId");
+                    b.HasIndex("SegmentId");
 
                     b.ToTable("ProgramDayData");
                 });
@@ -108,12 +108,9 @@ namespace HAOS_API.Migrations
                     b.Property<string>("Title")
                         .HasColumnType("longtext");
 
-                    b.Property<int?>("TrainingProgramId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("TrainingProgramId");
+                    b.HasIndex("ProgramId");
 
                     b.ToTable("SegmentData");
                 });
@@ -165,30 +162,40 @@ namespace HAOS_API.Migrations
 
             modelBuilder.Entity("HAOS.Models.Training.Circuit", b =>
                 {
-                    b.HasOne("HAOS.Models.Training.ProgramDay", null)
+                    b.HasOne("HAOS.Models.Training.ProgramDay", "ProgramDay")
                         .WithMany("Circuits")
                         .HasForeignKey("ProgramDayId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("ProgramDay");
                 });
 
             modelBuilder.Entity("HAOS.Models.Training.ProgramDay", b =>
                 {
-                    b.HasOne("HAOS.Models.Training.ProgramSegment", null)
+                    b.HasOne("HAOS.Models.Training.ProgramSegment", "Segment")
                         .WithMany("Days")
-                        .HasForeignKey("ProgramSegmentId");
+                        .HasForeignKey("SegmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Segment");
                 });
 
             modelBuilder.Entity("HAOS.Models.Training.ProgramSegment", b =>
                 {
-                    b.HasOne("HAOS.Models.Training.TrainingProgram", null)
+                    b.HasOne("HAOS.Models.Training.TrainingProgram", "Program")
                         .WithMany("Segments")
-                        .HasForeignKey("TrainingProgramId");
+                        .HasForeignKey("ProgramId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Program");
                 });
 
             modelBuilder.Entity("HAOS.Models.Training.Workout", b =>
                 {
-                    b.HasOne("HAOS.Models.Training.Circuit", null)
+                    b.HasOne("HAOS.Models.Training.Circuit", "Circuit")
                         .WithMany("Workouts")
                         .HasForeignKey("CircuitId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -199,6 +206,8 @@ namespace HAOS_API.Migrations
                         .HasForeignKey("Exercise_Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Circuit");
 
                     b.Navigation("Exercise_");
                 });

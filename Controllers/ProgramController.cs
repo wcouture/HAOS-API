@@ -262,6 +262,18 @@ public class ProgramController : IProgramController
             return Results.NotFound(ex.Message);
         }
     }
+    public async Task<IResult> UpdateCircuit(Circuit circuit, int id)
+    {
+        try
+        {
+            var updatedCircuit = await _programCircuitService.UpdateCircuit(circuit, id);
+            return Results.Ok(updatedCircuit);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return Results.NotFound(ex.Message);
+        }
+    }
 
     // Workout CRUD
     public async Task<IResult> AddWorkout(Workout workout, int circuitId)

@@ -3,6 +3,7 @@ using HAOS.Models.Training;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HAOS_API.Migrations
 {
     [DbContext(typeof(TrainingDb))]
-    partial class TrainingDbModelSnapshot : ModelSnapshot
+    [Migration("20250625153919_ExplicitRelationships")]
+    partial class ExplicitRelationships
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -151,14 +154,12 @@ namespace HAOS_API.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("longtext");
 
-                    b.Property<int>("Exercise_Id")
+                    b.Property<int>("ExerciseId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CircuitId");
-
-                    b.HasIndex("Exercise_Id");
 
                     b.ToTable("WorkoutData");
                 });
@@ -193,14 +194,6 @@ namespace HAOS_API.Migrations
                         .HasForeignKey("CircuitId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("HAOS.Models.Training.Exercise", "Exercise_")
-                        .WithMany()
-                        .HasForeignKey("Exercise_Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Exercise_");
                 });
 
             modelBuilder.Entity("HAOS.Models.Training.Circuit", b =>

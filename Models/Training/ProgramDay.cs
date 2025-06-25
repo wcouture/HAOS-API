@@ -7,5 +7,6 @@ public class ProgramDay {
     public int Id { get; set; }
     public string? Title { get; set; }
     public int WeekNum { get; set; }
-    public List<Circuit>? Circuits { get; set; }
+    public int SegmentId { get; set; }
+    public IList<Circuit> Circuits { get; set; } = new List<Circuit>();
 }

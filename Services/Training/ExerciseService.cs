@@ -29,13 +29,9 @@ public class ExerciseService : IExerciseService
     {
         var exercise = await _context.ExerciseData.FirstOrDefaultAsync(e => e.Id == id) ?? throw new KeyNotFoundException("Exercise not found.");
         
-        var workouts = await _context.WorkoutData.Include(w => w.ExerciseRef).Where(w => w.ExerciseRef!.Id == id).ToListAsync();
-        foreach (var workout in workouts)
-        {
-            workout.ExerciseRef = null;
-        }
-
-        _context.ExerciseData.Remove(exercise);
+        var workouts = await _context.WorkoutData.Include(w => w.Exercise_).Where(w => w.Exercise_.Id == id).ToListAsync();
+        _context.RemoveRange(workouts);
+        _context.Remove(exercise);
         await _context.SaveChangesAsync();
         return exercise;
     }
@@ -49,7 +45,7 @@ public class ExerciseService : IExerciseService
     public async Task<IEnumerable<Exercise>> GetExercises()
     {
         var exercises = await _context.ExerciseData.ToListAsync();
-        return exercises ?? [];
+        return exercises;
     }
 
     public async Task<Exercise> UpdateExercise(Exercise exercise, int id)

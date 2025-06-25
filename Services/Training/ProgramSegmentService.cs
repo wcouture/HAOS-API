@@ -14,6 +14,7 @@ public class ProgramSegmentService : IProgramSegmentService
 
     public async Task<ProgramSegment> AddProgramSegment(ProgramSegment programSegment, int programId)
     {
+        programSegment.ProgramId = programId;
         var program = await _context.ProgramData.Include(p => p.Segments).FirstOrDefaultAsync(p => p.Id == programId) ?? throw new KeyNotFoundException("Program not found.");
 
         if (program.Segments?.Any(s => s.Title == programSegment.Title) ?? false)
@@ -31,13 +32,26 @@ public class ProgramSegmentService : IProgramSegmentService
     public async Task<ProgramSegment> DeleteProgramSegment(int programId, int id)
     {
         var program = await _context.ProgramData.Include(p => p.Segments).FirstOrDefaultAsync(p => p.Id == programId) ?? throw new KeyNotFoundException("Program not found.");
+        var segment = await _context.SegmentData.Include(s => s.Days).FirstOrDefaultAsync(ps => ps.Id == id) ?? throw new KeyNotFoundException("Segment not found.");
 
-        var programSegment = program.Segments?.FirstOrDefault(ps => ps.Id == id) ?? throw new KeyNotFoundException("Segment not found.");
+        var deletedDays = segment.Days;
+        var dayIds = deletedDays.Select(d => d.Id).ToList();
 
-        program.Segments?.Remove(programSegment);
-        _context.SegmentData.Remove(programSegment);
+        var deletedCircuits = await _context.CircuitData.Where(c => dayIds.Contains(c.ProgramDayId)).ToListAsync();
+        var circuitIds = deletedCircuits.Select(c => c.Id).ToList();
+
+        var deletedWorkouts = await _context.WorkoutData.Where(w => circuitIds.Contains(w.CircuitId)).ToListAsync();
+        var workoutIds = deletedWorkouts.Select(w => w.Id).ToList();
+
+        program.Segments?.Remove(segment);
+
+        _context.WorkoutData.RemoveRange(deletedWorkouts);
+        _context.CircuitData.RemoveRange(deletedCircuits);
+        _context.ProgramDayData.RemoveRange(deletedDays);
+
+        _context.Remove(segment);
         _context.SaveChanges();
-        return programSegment;
+        return segment;
     }
 
     public async Task<ProgramSegment> GetProgramSegment(int id)
@@ -46,11 +60,11 @@ public class ProgramSegmentService : IProgramSegmentService
         return programSegment;
     }
 
-    public async Task<List<ProgramSegment>> GetProgramSegments(int programId)
+    public async Task<IList<ProgramSegment>> GetProgramSegments(int programId)
     {
         var program = await _context.ProgramData.Include(p => p.Segments).FirstOrDefaultAsync(p => p.Id == programId) ?? throw new KeyNotFoundException("Program not found.");
 
-        return program.Segments ?? [];
+        return program.Segments;
     }
 
     public async Task<ProgramSegment> UpdateProgramSegment(ProgramSegment programSegment, int id)

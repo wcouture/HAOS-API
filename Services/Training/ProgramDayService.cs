@@ -13,6 +13,7 @@ public class ProgramDayService : IProgramDayService
 
     public async Task<ProgramDay> CreateProgramDay(ProgramDay programDay, int segmentId)
     {
+        programDay.SegmentId = segmentId;
         var segment = await _context.SegmentData.Include(s => s.Days).FirstOrDefaultAsync(s => s.Id == segmentId) ?? throw new KeyNotFoundException("Segment not found.");
 
         if (segment.Days?.Any(d => d.Title == programDay.Title) ?? false)
@@ -28,14 +29,23 @@ public class ProgramDayService : IProgramDayService
     public async Task<ProgramDay> DeleteProgramDay(int segmentId, int id)
     {
         var segment = await _context.SegmentData.Include(s => s.Days).FirstOrDefaultAsync(s => s.Id == segmentId) ?? throw new KeyNotFoundException("Segment not found.");
+        var programDay = await _context.ProgramDayData.Include(d => d.Circuits).FirstOrDefaultAsync(d => d.Id == id) ?? throw new KeyNotFoundException("Day not found.");
 
-        var day = segment.Days?.FirstOrDefault(d => d.Id == id) ?? throw new KeyNotFoundException("Day not found.");
+        var deletedCircuits = programDay.Circuits;
+        var circuitIds = deletedCircuits.Select(c => c.Id).ToList();
 
-        segment.Days?.Remove(day);
-        _context.ProgramDayData.Remove(day);
+        var deletedWorkouts = await _context.WorkoutData.Where(w => circuitIds.Contains(w.CircuitId)).ToListAsync();
+        var workoutIds = deletedWorkouts.Select(w => w.Id).ToList();
+
+        segment.Days?.Remove(programDay);
+
+        _context.WorkoutData.RemoveRange(deletedWorkouts);
+        _context.CircuitData.RemoveRange(deletedCircuits);
+
+        _context.Remove(programDay);
 
         await _context.SaveChangesAsync();
-        return day;
+        return programDay;
     }
 
     public async Task<ProgramDay> GetProgramDay(int id)
@@ -44,10 +54,10 @@ public class ProgramDayService : IProgramDayService
         return day;
     }
 
-    public async Task<List<ProgramDay>> GetProgramDays(int segmentId)
+    public async Task<IList<ProgramDay>> GetProgramDays(int segmentId)
     {
         var segment = await _context.SegmentData.Include(s => s.Days).FirstOrDefaultAsync(s => s.Id == segmentId) ?? throw new KeyNotFoundException("Segment not found.");
-        return segment.Days ?? [];
+        return segment.Days;
     }
 
     public async Task<ProgramDay> UpdateProgramDay(ProgramDay programDay, int id)

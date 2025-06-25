@@ -3,6 +3,7 @@ using HAOS.Models.Training;
 using HAOS.Services.Training;
 using HAOS.Services.Auth;
 using HAOS.Controllers;
+using Microsoft.EntityFrameworkCore;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -109,9 +110,25 @@ app.Use((context, next) =>
 });
 
 
-app.MapGet("/", () =>
+app.MapGet("/", async (TrainingDb _context) =>
 {
-    return "Welcome to HAOS App API";
+
+    var programs = await _context.ProgramData.ToListAsync();
+    var ProgramSegments = await _context.SegmentData.ToListAsync();
+    var programDays = await _context.ProgramDayData.ToListAsync();
+    var programCircuits = await _context.CircuitData.ToListAsync();
+    var workouts = await _context.WorkoutData.ToListAsync();
+    var exercises = await _context.ExerciseData.ToListAsync();
+
+
+    return Results.Ok(new {
+        programs,
+        ProgramSegments,
+        programDays,
+        programCircuits,
+        workouts,
+        exercises
+    });
 });
 
 app.MapGet("/rsa/key", (IEncryptionService encryptionService) =>
@@ -147,6 +164,7 @@ app.MapGet("/circuits/all/{programDayId}", async (IProgramController programCont
 app.MapPost("/circuits/add/{programDayId}", async (IProgramController programController, Circuit newCircuit, int programDayId) => await programController.AddCircuit(newCircuit, programDayId));
 app.MapDelete("/circuits/delete/{programDayId}/{id}", async (IProgramController programController, int programDayId, int id) => await programController.DeleteCircuit(programDayId, id));
 app.MapGet("/circuits/find/{id}", async (IProgramController programController, int id) => await programController.GetCircuitById(id));
+app.MapPut("/circuits/update/{id}", async (IProgramController programController, Circuit updatedCircuit, int id) => await programController.UpdateCircuit(updatedCircuit, id));
 
 // Workouts
 app.MapGet("/workouts/all/{circuitId}", async (IProgramController programController, int circuitId) => await programController.GetWorkouts(circuitId));

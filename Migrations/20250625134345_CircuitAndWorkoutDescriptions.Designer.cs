@@ -3,6 +3,7 @@ using HAOS.Models.Training;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HAOS_API.Migrations
 {
     [DbContext(typeof(TrainingDb))]
-    partial class TrainingDbModelSnapshot : ModelSnapshot
+    [Migration("20250625134345_CircuitAndWorkoutDescriptions")]
+    partial class CircuitAndWorkoutDescriptions
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -32,7 +35,7 @@ namespace HAOS_API.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("longtext");
 
-                    b.Property<int>("ProgramDayId")
+                    b.Property<int?>("ProgramDayId")
                         .HasColumnType("int");
 
                     b.Property<int>("Rounds")
@@ -75,9 +78,6 @@ namespace HAOS_API.Migrations
                     b.Property<int?>("ProgramSegmentId")
                         .HasColumnType("int");
 
-                    b.Property<int>("SegmentId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Title")
                         .HasColumnType("longtext");
 
@@ -98,9 +98,6 @@ namespace HAOS_API.Migrations
                         .HasColumnType("int");
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ProgramId")
-                        .HasColumnType("int");
 
                     b.Property<string>("Subtitle")
                         .HasColumnType("longtext");
@@ -145,20 +142,20 @@ namespace HAOS_API.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CircuitId")
+                    b.Property<int?>("CircuitId")
                         .HasColumnType("int");
 
                     b.Property<string>("Description")
                         .HasColumnType("longtext");
 
-                    b.Property<int>("Exercise_Id")
+                    b.Property<int?>("ExerciseRefId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CircuitId");
 
-                    b.HasIndex("Exercise_Id");
+                    b.HasIndex("ExerciseRefId");
 
                     b.ToTable("WorkoutData");
                 });
@@ -167,9 +164,7 @@ namespace HAOS_API.Migrations
                 {
                     b.HasOne("HAOS.Models.Training.ProgramDay", null)
                         .WithMany("Circuits")
-                        .HasForeignKey("ProgramDayId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ProgramDayId");
                 });
 
             modelBuilder.Entity("HAOS.Models.Training.ProgramDay", b =>
@@ -190,17 +185,13 @@ namespace HAOS_API.Migrations
                 {
                     b.HasOne("HAOS.Models.Training.Circuit", null)
                         .WithMany("Workouts")
-                        .HasForeignKey("CircuitId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CircuitId");
 
-                    b.HasOne("HAOS.Models.Training.Exercise", "Exercise_")
+                    b.HasOne("HAOS.Models.Training.Exercise", "ExerciseRef")
                         .WithMany()
-                        .HasForeignKey("Exercise_Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ExerciseRefId");
 
-                    b.Navigation("Exercise_");
+                    b.Navigation("ExerciseRef");
                 });
 
             modelBuilder.Entity("HAOS.Models.Training.Circuit", b =>

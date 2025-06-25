@@ -12,31 +12,30 @@ public class WorkoutService : IWorkoutService
     }
     public async Task<Workout> CreateWorkout(Workout workout, int circuitId)
     {
+        workout.CircuitId = circuitId;
         var circuit = await _context.CircuitData.Include(c => c.Workouts).FirstOrDefaultAsync(c => c.Id == circuitId) ?? throw new KeyNotFoundException("Circuit not found.");
 
-        var existingWorkout = await _context.WorkoutData.FirstOrDefaultAsync(w => w.ExerciseRef == workout.ExerciseRef);
+        var existingWorkout = await _context.WorkoutData.Include(w => w.Exercise_).FirstOrDefaultAsync(w => w.Exercise_.Id == workout.Exercise_.Id && w.CircuitId == circuitId);
         if (existingWorkout != null)
         {
-            throw new DbConflictException("Workout with the same exercise already exists.");
+            throw new DbConflictException("Workout with the same exercise already exists in circuit.");
         }
 
-        var result = await _context.WorkoutData.AddAsync(workout);
-
-        circuit.Workouts?.Add(result.Entity);
+        circuit.Workouts?.Add(workout);
 
         await _context.SaveChangesAsync();
-        return result.Entity;
+        return workout;
 
     }
 
     public async Task<Workout> DeleteWorkout(int circuitId, int id)
     {
-        var circuit = await _context.CircuitData.Include(c => c.Workouts).FirstOrDefaultAsync(c => c.Id == circuitId) ?? throw new KeyNotFoundException("Circuit not found.");
-        var workout = circuit.Workouts?.FirstOrDefault(w => w.Id == id) ?? throw new KeyNotFoundException("Workout not found.");
+        var workout = await _context.WorkoutData.FirstOrDefaultAsync(w => w.Id == id) ?? throw new KeyNotFoundException("Workout not found.");
 
-        circuit.Workouts?.Remove(workout);
-        _context.WorkoutData.Remove(workout);
+        if (workout.CircuitId != circuitId)
+            throw new KeyNotFoundException("Circuit ID doesn't match workout.");
 
+        _context.Remove(workout);
         await _context.SaveChangesAsync();
         return workout;
 
@@ -44,33 +43,23 @@ public class WorkoutService : IWorkoutService
 
     public async Task<Workout> GetWorkout(int id)
     {
-        var workout = await _context.WorkoutData.Include(w => w.ExerciseRef).FirstOrDefaultAsync(w => w.Id == id) ?? throw new KeyNotFoundException("Workout not found.");
+        var workout = await _context.WorkoutData.FirstOrDefaultAsync(w => w.Id == id) ?? throw new KeyNotFoundException("Workout not found.");
         return workout;
     }
 
-    public async Task<List<Workout>> GetWorkouts(int circuitId)
+    public async Task<IList<Workout>> GetWorkouts(int circuitId)
     {
         var circuit = await _context.CircuitData.Include(c => c.Workouts).FirstOrDefaultAsync(c => c.Id == circuitId) ?? throw new KeyNotFoundException("Circuit not found.");
-
-        foreach (var workout in circuit.Workouts ?? [])
-        {
-            var work = await GetWorkout(workout.Id);
-            workout.ExerciseRef = work.ExerciseRef;
-        }
-
-        return circuit.Workouts ?? [];
+    
+        return circuit.Workouts;
     }
 
     public async Task<Workout> UpdateWorkout(Workout workout, int id)
     {
-        var existingWorkout = await _context.WorkoutData.Include(w => w.ExerciseRef).FirstOrDefaultAsync(w => w.Id == id) ?? throw new KeyNotFoundException("Workout not found.");
+        var existingWorkout = await _context.WorkoutData.FirstOrDefaultAsync(w => w.Id == id) ?? throw new KeyNotFoundException("Workout not found.");
 
-        if (workout.ExerciseRef != null)
-            existingWorkout.ExerciseRef = workout.ExerciseRef;
-        
-        existingWorkout.RecommendedReps = workout.RecommendedReps;
-        existingWorkout.RecommendedSets = workout.RecommendedSets;
-        existingWorkout.RecommendedWeight = workout.RecommendedWeight;
+        existingWorkout.Exercise_ = workout.Exercise_;    
+        existingWorkout.Description = workout.Description;
 
         await _context.SaveChangesAsync();
         return existingWorkout;
