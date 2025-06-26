@@ -96,6 +96,7 @@ public class ProgramService : IProgramService
         await _context.ProgramDayData.LoadAsync();
         await _context.CircuitData.LoadAsync();
         await _context.WorkoutData.LoadAsync();
+        await _context.ExerciseData.LoadAsync();
         return program;
     }
 
