@@ -92,6 +92,10 @@ public class ProgramService : IProgramService
     public async Task<TrainingProgram> GetProgramById(int id)
     {
         var program = await _context.ProgramData.FirstOrDefaultAsync(p => p.Id == id) ?? throw new KeyNotFoundException("Program not found.");
+        await _context.SegmentData.LoadAsync();
+        await _context.ProgramDayData.LoadAsync();
+        await _context.CircuitData.LoadAsync();
+        await _context.WorkoutData.LoadAsync();
         return program;
     }
 
