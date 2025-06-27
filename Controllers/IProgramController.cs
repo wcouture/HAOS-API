@@ -4,7 +4,6 @@ namespace HAOS.Controllers;
 
 public interface IProgramController
 {
-
     // Top Layer Program Data
     Task<IResult> GetPrograms();
     Task<IResult> GetProgramById(int id);
