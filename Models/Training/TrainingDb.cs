@@ -5,7 +5,7 @@ namespace HAOS.Models.Training;
 public class TrainingDb : DbContext
 {
     public TrainingDb() { }
-    public TrainingDb(DbContextOptions options) : base(options) { }
+    public TrainingDb(DbContextOptions<TrainingDb> options) : base(options) { }
 
     public DbSet<TrainingProgram> ProgramData { get; set; } = null!;
     public DbSet<ProgramSegment> SegmentData { get; set; } = null!;

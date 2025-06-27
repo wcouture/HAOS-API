@@ -4,5 +4,7 @@ namespace HAOS.Services.User;
 
 public interface IUserDataService
 {
-    Task<UserAccount> GetUserData(string username);
+    Task<List<CompletedWorkout>> GetAllCompletedWorkouts(int userId);
+    Task<CompletedWorkout> AddCompletedWorkout(CompletedWorkout completedWorkout, int userId);
+    Task<CompletedWorkout> DeleteCompletedWorkout(int completedWorkoutId, int userId);
 }

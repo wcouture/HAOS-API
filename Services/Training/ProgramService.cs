@@ -1,4 +1,4 @@
-using System.Text.Json;
+using HAOS.Models.Exceptions;
 using HAOS.Models.Training;
 using Microsoft.EntityFrameworkCore;
 

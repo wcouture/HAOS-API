@@ -1,4 +1,5 @@
 using HAOS.Models.Training;
+using HAOS.Models.Exceptions;
 using Microsoft.EntityFrameworkCore;
 
 namespace HAOS.Services.Training;

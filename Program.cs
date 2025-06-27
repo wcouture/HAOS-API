@@ -25,7 +25,7 @@ builder.Services.AddDbContext<UserDataDb>(
     options => options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
 );
 
-
+// Training program services
 builder.Services.AddScoped<IProgramService, ProgramService>();
 builder.Services.AddScoped<IProgramSegmentService, ProgramSegmentService>();
 builder.Services.AddScoped<IProgramDayService, ProgramDayService>();
@@ -33,8 +33,16 @@ builder.Services.AddScoped<IProgramCircuitService, ProgramCircuitService>();
 builder.Services.AddScoped<IWorkoutService, WorkoutService>();
 builder.Services.AddScoped<IExerciseService, ExerciseService>();
 
-builder.Services.AddScoped<IProgramController, ProgramController>();
+// User account and data services
+builder.Services.AddScoped<IUserAccountService, UserAccountService>();
+builder.Services.AddScoped<IUserDataService, UserDataService>();
+
+// Encryption services
 builder.Services.AddScoped<IEncryptionService, RsaEncryptionService>();
+
+// Controllers
+builder.Services.AddScoped<IProgramController, ProgramController>();
+builder.Services.AddScoped<IUserDataController, UserDataController>();
 
 builder.Services.AddSwaggerGen(c =>
 {

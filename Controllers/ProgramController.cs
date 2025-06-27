@@ -1,5 +1,6 @@
 using HAOS.Models.Training;
 using HAOS.Services.Training;
+using HAOS.Models.Exceptions;
 
 namespace HAOS.Controllers;
 

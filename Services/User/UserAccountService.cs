@@ -1,0 +1,75 @@
+using HAOS.Models.Exceptions;
+using HAOS.Models.User;
+using HAOS.Services.User;
+using Microsoft.EntityFrameworkCore;
+
+public class UserAccountService : IUserAccountService
+{
+    private readonly UserDataDb _userDataDb;
+
+    public UserAccountService(UserDataDb userDataDb)
+    {
+        _userDataDb = userDataDb;
+    }
+
+    public async Task<IList<UserAccount>> GetAllUsers()
+    {
+        var users = await _userDataDb.UserAccounts.Select(u => new UserAccount { Id = u.Id, Email = u.Email, FirstName = u.FirstName, LastName = u.LastName}).ToListAsync();
+        return users;
+    }
+
+    public async Task<UserAccount> AddUser(UserAccount user)
+    {
+        var existingUser = await _userDataDb.UserAccounts.FirstOrDefaultAsync(u => u.Email == user.Email);
+        if (existingUser != null)
+        {
+            throw new DbConflictException("User already exists.");
+        }
+        user.CompletedWorkouts ??= [];
+        _userDataDb.UserAccounts.Add(user);
+        await _userDataDb.SaveChangesAsync();
+        return user;
+    }
+
+    public async Task<UserAccount> Authenticate(UserAccount user)
+    {
+        var existingUser = await _userDataDb.UserAccounts.FirstOrDefaultAsync(u => u.Email == user.Email) ?? throw new KeyNotFoundException("User not found.");
+        
+        if (existingUser.Password != user.Password)
+        {
+            throw new FailedAuthenticationException("Invalid password.");   
+        }
+
+        return existingUser;
+    }
+
+    public async Task<UserAccount> DeleteUser(int id)
+    {
+        var user = await _userDataDb.UserAccounts.FirstOrDefaultAsync(u => u.Id == id) ?? throw new KeyNotFoundException("User not found.");
+
+        var completedWorkouts = await _userDataDb.CompletedWorkouts.Where(cw => cw.UserId == id).ToListAsync();
+        _userDataDb.CompletedWorkouts.RemoveRange(completedWorkouts);
+
+        _userDataDb.UserAccounts.Remove(user);
+        await _userDataDb.SaveChangesAsync();
+        return user; 
+    }
+
+    public async Task<UserAccount> GetUserInfo(int id)
+    {
+        var user = await _userDataDb.UserAccounts.Select(u => new UserAccount { Id = u.Id, Email = u.Email, FirstName = u.FirstName, LastName = u.LastName}).FirstOrDefaultAsync(u => u.Id == id) ?? throw new KeyNotFoundException("User not found.");
+        return user;
+    }
+
+    public async Task<UserAccount> UpdateUserInfo(UserAccount user, int id)
+    {
+        var existingUser = await _userDataDb.UserAccounts.FirstOrDefaultAsync(u => u.Id == id) ?? throw new KeyNotFoundException("User not found.");
+
+        existingUser.FirstName = user.FirstName;
+        existingUser.LastName = user.LastName;
+        existingUser.Email = user.Email;
+
+        await _userDataDb.SaveChangesAsync();
+        return existingUser;
+    }
+}

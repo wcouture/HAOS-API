@@ -1,4 +1,6 @@
 using HAOS.Models.Training;
+using HAOS.Models.User;
+using HAOS.Services.User;
 
 namespace HAOS.Controllers;
 
@@ -15,6 +17,23 @@ public class RouteController : IRouteController
         MapExerciseEndpoints(app);
 
         // Map User Account Endpoints
+        MapUserAccountEndpoints(app);
+        MapUserWorkoutEndpoints(app);
+    }
+
+    private void MapUserAccountEndpoints(WebApplication app)
+    {
+        app.MapPost("/user/login", async (IUserDataController userDataController, UserAccount user) => await userDataController.LoginUser(user));
+        app.MapPost("/user/register", async (IUserDataController userDataController, UserAccount user) => await userDataController.RegisterUser(user));
+        app.MapPut("/user/update/{id}", async (IUserDataController userDataController, UserAccount updatedUser, int id) => await userDataController.UpdateUserInfo(updatedUser, id));
+        app.MapGet("/user/find/{id}", async (IUserDataController userDataController, int id) => await userDataController.GetUserInfo(id));
+    }
+
+    private void MapUserWorkoutEndpoints(WebApplication app)
+    {
+        app.MapGet("/userworkouts/all/{userId}", async (IUserDataController userDataController, int userId) => await userDataController.GetCompletedWorkouts(userId));
+        app.MapPost("/userworkouts/add", async (IUserDataController userDataController, CompletedWorkout newWorkout, int userId) => await userDataController.AddCompletedWorkout(newWorkout, userId));
+        app.MapDelete("/userworkouts/delete/{userId}/{id}", async (IUserDataController userDataController, int userId, int id) => await userDataController.DeleteCompletedWorkout(id, userId));
     }
 
     private void MapProgramEndpoints(WebApplication app)
