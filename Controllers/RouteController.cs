@@ -27,6 +27,8 @@ public class RouteController : IRouteController
         app.MapPost("/user/register", async (IUserDataController userDataController, UserAccount user) => await userDataController.RegisterUser(user));
         app.MapPut("/user/update/{id}", async (IUserDataController userDataController, UserAccount updatedUser, int id) => await userDataController.UpdateUserInfo(updatedUser, id));
         app.MapGet("/user/find/{id}", async (IUserDataController userDataController, int id) => await userDataController.GetUserInfo(id));
+        app.MapGet("/user/all", async (IUserDataController userDataController) => await userDataController.GetAllUsers());
+        app.MapDelete("/user/delete/{id}", async (IUserDataController userDataController, int id) => await userDataController.DeleteUser(id));
     }
 
     private void MapUserWorkoutEndpoints(WebApplication app)

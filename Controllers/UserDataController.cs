@@ -52,13 +52,20 @@ public class UserDataController : IUserDataController
 
     // User Account Functions
 
+    public async Task<IResult> GetAllUsers()
+    {
+        var users = await _userAccountService.GetAllUsers();
+        return Results.Ok(users);
+    }
+
     public async Task<IResult> DeleteUser(int id)
     {
         try
         {
             var deletedUser = await _userAccountService.DeleteUser(id);
             return Results.Ok(deletedUser);
-        } catch (KeyNotFoundException ex)    
+        }
+        catch (KeyNotFoundException ex)
         {
             return Results.NotFound(ex.Message);
         }

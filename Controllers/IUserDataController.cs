@@ -8,6 +8,7 @@ public interface IUserDataController
     Task<IResult> RegisterUser(UserAccount user);
     Task<IResult> LoginUser(UserAccount user);
     Task<IResult> GetUserInfo(int id);
+    Task<IResult> GetAllUsers();
     Task<IResult> UpdateUserInfo(UserAccount user, int id);
     Task<IResult> DeleteUser(int id);
 

@@ -14,7 +14,11 @@ public class UserAccountService : IUserAccountService
 
     public async Task<IList<UserAccount>> GetAllUsers()
     {
-        var users = await _userDataDb.UserAccounts.Select(u => new UserAccount { Id = u.Id, Email = u.Email, FirstName = u.FirstName, LastName = u.LastName}).ToListAsync();
+        var users = await _userDataDb.UserAccounts.ToListAsync();
+        foreach (var user in users)
+        {
+            user.Password = null;
+        }
         return users;
     }
 
@@ -57,7 +61,8 @@ public class UserAccountService : IUserAccountService
 
     public async Task<UserAccount> GetUserInfo(int id)
     {
-        var user = await _userDataDb.UserAccounts.Select(u => new UserAccount { Id = u.Id, Email = u.Email, FirstName = u.FirstName, LastName = u.LastName}).FirstOrDefaultAsync(u => u.Id == id) ?? throw new KeyNotFoundException("User not found.");
+        var user = await _userDataDb.UserAccounts.FirstOrDefaultAsync(u => u.Id == id) ?? throw new KeyNotFoundException("User not found.");
+        user.Password = null;
         return user;
     }
 
