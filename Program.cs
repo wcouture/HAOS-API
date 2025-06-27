@@ -1,7 +1,9 @@
 using HAOS.Models.Auth;
 using HAOS.Models.Training;
+using HAOS.Models.User;
 using HAOS.Services.Training;
 using HAOS.Services.Auth;
+using HAOS.Services.User;
 using HAOS.Controllers;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,8 +13,17 @@ builder.Services.AddEndpointsApiExplorer();
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddDbContext<EncryptionKeyDb>();
-builder.Services.AddDbContext<TrainingDb>();
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+builder.Services.AddDbContext<EncryptionKeyDb>(
+    options => options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
+);
+builder.Services.AddDbContext<TrainingDb>(
+    options => options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
+);
+builder.Services.AddDbContext<UserDataDb>(
+    options => options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
+);
 
 
 builder.Services.AddScoped<IProgramService, ProgramService>();
