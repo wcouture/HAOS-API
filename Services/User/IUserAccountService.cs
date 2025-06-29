@@ -10,4 +10,6 @@ public interface IUserAccountService
     Task<UserAccount> GetUserInfo(int id);
     Task<UserAccount> UpdateUserInfo(UserAccount user, int id);
     Task<UserAccount> DeleteUser(int id);
+
+    Task<UserAccount> AddSubscription(int programId, int userId);
 }

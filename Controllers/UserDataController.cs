@@ -21,7 +21,8 @@ public class UserDataController : IUserDataController
         {
             var newCompletedWorkout = await _userDataService.AddCompletedWorkout(completedWorkout, userId);
             return Results.Created($"/userworkouts/find/{newCompletedWorkout.Id}", newCompletedWorkout);
-        } catch (DbConflictException ex)
+        }
+        catch (DbConflictException ex)
         {
             return Results.Conflict(ex.Message);
         }
@@ -32,7 +33,8 @@ public class UserDataController : IUserDataController
         {
             var deletedCompletedWorkout = await _userDataService.DeleteCompletedWorkout(completedWorkoutId, userId);
             return Results.Ok(deletedCompletedWorkout);
-        } catch (KeyNotFoundException ex)
+        }
+        catch (KeyNotFoundException ex)
         {
             return Results.NotFound(ex.Message);
         }
@@ -43,7 +45,8 @@ public class UserDataController : IUserDataController
         {
             var completedWorkouts = await _userDataService.GetAllCompletedWorkouts(userId);
             return Results.Ok(completedWorkouts);
-        } catch (KeyNotFoundException ex)
+        }
+        catch (KeyNotFoundException ex)
         {
             return Results.NotFound(ex.Message);
         }
@@ -76,7 +79,8 @@ public class UserDataController : IUserDataController
         {
             var userInfo = await _userAccountService.GetUserInfo(id);
             return Results.Ok(userInfo);
-        } catch (KeyNotFoundException ex)
+        }
+        catch (KeyNotFoundException ex)
         {
             return Results.NotFound(ex.Message);
         }
@@ -115,7 +119,21 @@ public class UserDataController : IUserDataController
         {
             var updatedUser = await _userAccountService.UpdateUserInfo(user, id);
             return Results.Ok(updatedUser);
-        } catch (KeyNotFoundException ex)
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return Results.NotFound(ex.Message);
+        }
+    }
+    
+    public async Task<IResult> AddSubscription(int programId, int userId)
+    {
+        try
+        {
+            var subscribedUser = await _userAccountService.AddSubscription(programId, userId);
+            return Results.Ok(subscribedUser);
+        }
+        catch (KeyNotFoundException ex)
         {
             return Results.NotFound(ex.Message);
         }

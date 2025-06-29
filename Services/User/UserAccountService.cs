@@ -1,4 +1,5 @@
 using HAOS.Models.Exceptions;
+using HAOS.Models.Training;
 using HAOS.Models.User;
 using HAOS.Services.User;
 using Microsoft.EntityFrameworkCore;
@@ -6,10 +7,12 @@ using Microsoft.EntityFrameworkCore;
 public class UserAccountService : IUserAccountService
 {
     private readonly UserDataDb _userDataDb;
+    private readonly TrainingDb _trainingDb;
 
-    public UserAccountService(UserDataDb userDataDb)
+    public UserAccountService(UserDataDb userDataDb, TrainingDb trainingDb)
     {
         _userDataDb = userDataDb;
+        _trainingDb = trainingDb;
     }
 
     public async Task<IList<UserAccount>> GetAllUsers()
@@ -38,10 +41,10 @@ public class UserAccountService : IUserAccountService
     public async Task<UserAccount> Authenticate(UserAccount user)
     {
         var existingUser = await _userDataDb.UserAccounts.FirstOrDefaultAsync(u => u.Email == user.Email) ?? throw new KeyNotFoundException("User not found.");
-        
+
         if (existingUser.Password != user.Password)
         {
-            throw new FailedAuthenticationException("Invalid password.");   
+            throw new FailedAuthenticationException("Invalid password.");
         }
 
         return existingUser;
@@ -56,7 +59,7 @@ public class UserAccountService : IUserAccountService
 
         _userDataDb.UserAccounts.Remove(user);
         await _userDataDb.SaveChangesAsync();
-        return user; 
+        return user;
     }
 
     public async Task<UserAccount> GetUserInfo(int id)
@@ -76,5 +79,16 @@ public class UserAccountService : IUserAccountService
 
         await _userDataDb.SaveChangesAsync();
         return existingUser;
+    }
+
+    public async Task<UserAccount> AddSubscription(int programId, int userId)
+    {
+        var user = await _userDataDb.UserAccounts.FirstOrDefaultAsync(u => u.Id == userId) ?? throw new KeyNotFoundException("User not found.");
+        var program = await _trainingDb.ProgramData.FirstOrDefaultAsync(p => p.Id == programId) ?? throw new KeyNotFoundException("Program not found.");
+
+        user.SubscribedPrograms ??= [];
+        user.SubscribedPrograms.Add(program.Id);
+        await _userDataDb.SaveChangesAsync();
+        return user;
     }
 }
