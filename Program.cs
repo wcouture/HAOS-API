@@ -21,9 +21,9 @@ builder.Services.AddDbContext<EncryptionKeyDb>(
 builder.Services.AddDbContext<TrainingDb>(
     options => options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
 );
-builder.Services.AddDbContext<UserDataDb>(
-    options => options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
-);
+// builder.Services.AddDbContext<UserDataDb>(
+//     options => options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
+// );
 
 // Training program services
 builder.Services.AddScoped<IProgramService, ProgramService>();

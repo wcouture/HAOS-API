@@ -132,7 +132,12 @@ namespace HAOS_API.Migrations
                     b.Property<string>("Title")
                         .HasColumnType("longtext");
 
+                    b.Property<int?>("UserAccountId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserAccountId");
 
                     b.ToTable("ProgramData");
                 });
@@ -163,6 +168,58 @@ namespace HAOS_API.Migrations
                     b.ToTable("WorkoutData");
                 });
 
+            modelBuilder.Entity("HAOS.Models.User.CompletedWorkout", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("UserAccountId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("WorkoutId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserAccountId");
+
+                    b.ToTable("CompletedWorkoutData");
+                });
+
+            modelBuilder.Entity("HAOS.Models.User.UserAccount", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Email")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("FirstName")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("LastName")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Password")
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("UserType")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AccountData");
+                });
+
             modelBuilder.Entity("HAOS.Models.Training.Circuit", b =>
                 {
                     b.HasOne("HAOS.Models.Training.ProgramDay", null)
@@ -186,6 +243,13 @@ namespace HAOS_API.Migrations
                         .HasForeignKey("TrainingProgramId");
                 });
 
+            modelBuilder.Entity("HAOS.Models.Training.TrainingProgram", b =>
+                {
+                    b.HasOne("HAOS.Models.User.UserAccount", null)
+                        .WithMany("SubscribedPrograms")
+                        .HasForeignKey("UserAccountId");
+                });
+
             modelBuilder.Entity("HAOS.Models.Training.Workout", b =>
                 {
                     b.HasOne("HAOS.Models.Training.Circuit", null)
@@ -201,6 +265,13 @@ namespace HAOS_API.Migrations
                         .IsRequired();
 
                     b.Navigation("Exercise_");
+                });
+
+            modelBuilder.Entity("HAOS.Models.User.CompletedWorkout", b =>
+                {
+                    b.HasOne("HAOS.Models.User.UserAccount", null)
+                        .WithMany("CompletedWorkouts")
+                        .HasForeignKey("UserAccountId");
                 });
 
             modelBuilder.Entity("HAOS.Models.Training.Circuit", b =>
@@ -221,6 +292,13 @@ namespace HAOS_API.Migrations
             modelBuilder.Entity("HAOS.Models.Training.TrainingProgram", b =>
                 {
                     b.Navigation("Segments");
+                });
+
+            modelBuilder.Entity("HAOS.Models.User.UserAccount", b =>
+                {
+                    b.Navigation("CompletedWorkouts");
+
+                    b.Navigation("SubscribedPrograms");
                 });
 #pragma warning restore 612, 618
         }

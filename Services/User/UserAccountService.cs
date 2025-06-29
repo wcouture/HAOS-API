@@ -6,18 +6,16 @@ using Microsoft.EntityFrameworkCore;
 
 public class UserAccountService : IUserAccountService
 {
-    private readonly UserDataDb _userDataDb;
     private readonly TrainingDb _trainingDb;
 
-    public UserAccountService(UserDataDb userDataDb, TrainingDb trainingDb)
+    public UserAccountService(TrainingDb trainingDb)
     {
-        _userDataDb = userDataDb;
         _trainingDb = trainingDb;
     }
 
     public async Task<IList<UserAccount>> GetAllUsers()
     {
-        var users = await _userDataDb.UserAccounts.ToListAsync();
+        var users = await _trainingDb.AccountData.Include(u => u.SubscribedPrograms).ToListAsync();
         foreach (var user in users)
         {
             user.Password = null;
@@ -27,20 +25,20 @@ public class UserAccountService : IUserAccountService
 
     public async Task<UserAccount> AddUser(UserAccount user)
     {
-        var existingUser = await _userDataDb.UserAccounts.FirstOrDefaultAsync(u => u.Email == user.Email);
+        var existingUser = await _trainingDb.AccountData.FirstOrDefaultAsync(u => u.Email == user.Email);
         if (existingUser != null)
         {
             throw new DbConflictException("User already exists.");
         }
         user.CompletedWorkouts ??= [];
-        _userDataDb.UserAccounts.Add(user);
-        await _userDataDb.SaveChangesAsync();
+        _trainingDb.AccountData.Add(user);
+        await _trainingDb.SaveChangesAsync();
         return user;
     }
 
     public async Task<UserAccount> Authenticate(UserAccount user)
     {
-        var existingUser = await _userDataDb.UserAccounts.FirstOrDefaultAsync(u => u.Email == user.Email) ?? throw new KeyNotFoundException("User not found.");
+        var existingUser = await _trainingDb.AccountData.FirstOrDefaultAsync(u => u.Email == user.Email) ?? throw new KeyNotFoundException("User not found.");
 
         if (existingUser.Password != user.Password)
         {
@@ -52,43 +50,43 @@ public class UserAccountService : IUserAccountService
 
     public async Task<UserAccount> DeleteUser(int id)
     {
-        var user = await _userDataDb.UserAccounts.FirstOrDefaultAsync(u => u.Id == id) ?? throw new KeyNotFoundException("User not found.");
+        var user = await _trainingDb.AccountData.FirstOrDefaultAsync(u => u.Id == id) ?? throw new KeyNotFoundException("User not found.");
 
-        var completedWorkouts = await _userDataDb.CompletedWorkouts.Where(cw => cw.UserId == id).ToListAsync();
-        _userDataDb.CompletedWorkouts.RemoveRange(completedWorkouts);
+        var completedWorkouts = await _trainingDb.CompletedWorkoutData.Where(cw => cw.UserId == id).ToListAsync();
+        _trainingDb.CompletedWorkoutData.RemoveRange(completedWorkouts);
 
-        _userDataDb.UserAccounts.Remove(user);
-        await _userDataDb.SaveChangesAsync();
+        _trainingDb.AccountData.Remove(user);
+        await _trainingDb.SaveChangesAsync();
         return user;
     }
 
     public async Task<UserAccount> GetUserInfo(int id)
     {
-        var user = await _userDataDb.UserAccounts.FirstOrDefaultAsync(u => u.Id == id) ?? throw new KeyNotFoundException("User not found.");
+        var user = await _trainingDb.AccountData.Include(u => u.SubscribedPrograms).FirstOrDefaultAsync(u => u.Id == id) ?? throw new KeyNotFoundException("User not found.");
         user.Password = null;
         return user;
     }
 
     public async Task<UserAccount> UpdateUserInfo(UserAccount user, int id)
     {
-        var existingUser = await _userDataDb.UserAccounts.FirstOrDefaultAsync(u => u.Id == id) ?? throw new KeyNotFoundException("User not found.");
+        var existingUser = await _trainingDb.AccountData.FirstOrDefaultAsync(u => u.Id == id) ?? throw new KeyNotFoundException("User not found.");
 
         existingUser.FirstName = user.FirstName;
         existingUser.LastName = user.LastName;
         existingUser.Email = user.Email;
 
-        await _userDataDb.SaveChangesAsync();
+        await _trainingDb.SaveChangesAsync();
         return existingUser;
     }
 
     public async Task<UserAccount> AddSubscription(int programId, int userId)
     {
-        var user = await _userDataDb.UserAccounts.FirstOrDefaultAsync(u => u.Id == userId) ?? throw new KeyNotFoundException("User not found.");
+        var user = await _trainingDb.AccountData.FirstOrDefaultAsync(u => u.Id == userId) ?? throw new KeyNotFoundException("User not found.");
         var program = await _trainingDb.ProgramData.FirstOrDefaultAsync(p => p.Id == programId) ?? throw new KeyNotFoundException("Program not found.");
 
         user.SubscribedPrograms ??= [];
-        user.SubscribedPrograms.Add(program.Id);
-        await _userDataDb.SaveChangesAsync();
+        user.SubscribedPrograms.Add(program);
+        await _trainingDb.SaveChangesAsync();
         return user;
     }
 }

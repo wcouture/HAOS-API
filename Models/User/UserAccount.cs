@@ -1,3 +1,5 @@
+using HAOS.Models.Training;
+
 namespace HAOS.Models.User;
 
 public enum UserType
@@ -16,6 +18,6 @@ public class UserAccount
     public string? LastName { get; set; }
     public string? Password { get; set; }
 
-    public List<int>? SubscribedPrograms { get; set; }
+    public List<TrainingProgram>? SubscribedPrograms { get; set; }
     public List<CompletedWorkout>? CompletedWorkouts { get; set; }
 }
