@@ -18,7 +18,7 @@ public class UserAccountService : IUserAccountService
 
     public async Task<IList<UserAccount>> GetAllUsers()
     {
-        var users = await _trainingDb.AccountData.Include(u => u.SubscribedPrograms).ToListAsync();
+        var users = await _trainingDb.AccountData.Include(u => u.SubscribedPrograms).Include(u => u.CompletedWorkouts).ToListAsync();
         foreach (var user in users)
         {
             user.Password = null;
@@ -70,6 +70,8 @@ public class UserAccountService : IUserAccountService
 
         var completedWorkouts = await _trainingDb.CompletedWorkoutData.Where(cw => cw.UserId == id).ToListAsync();
         _trainingDb.CompletedWorkoutData.RemoveRange(completedWorkouts);
+
+        user.SubscribedPrograms = [];
 
         _trainingDb.AccountData.Remove(user);
         await _trainingDb.SaveChangesAsync();

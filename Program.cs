@@ -96,20 +96,20 @@ app.Use((context, next) =>
 
     // Read in auth token from header, assume encrypted
     var encryptedAuthToken = context.Request.Headers["Authorization"];
-    var authToken = string.Empty;
-    if (!string.IsNullOrEmpty(encryptedAuthToken))
-    {
-        // Decrypt auth token
-        authToken = _encryptionService.Decrypt(encryptedAuthToken!);
-    }
-    else
-    {
-        // Missing auth token
-        context.Response.StatusCode = 401;
-        context.Response.WriteAsync("Missing Authorization header");
+    var authToken = context.Request.Headers["Authorization"];
+    // if (!string.IsNullOrEmpty(encryptedAuthToken))
+    // {
+    //     // Decrypt auth token
+    //     authToken = _encryptionService.Decrypt(encryptedAuthToken!);
+    // }
+    // else
+    // {
+    //     // Missing auth token
+    //     context.Response.StatusCode = 401;
+    //     context.Response.WriteAsync("Missing Authorization header");
 
-        return Task.CompletedTask;
-    }
+    //     return Task.CompletedTask;
+    // }
 
     // Check if authToken is valid here
     if (authToken == "HAOSAPIauthorizationToken")
