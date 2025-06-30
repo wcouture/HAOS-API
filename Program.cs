@@ -87,46 +87,44 @@ app.UseHttpsRedirection();
 // Custom authentication
 app.Use((context, next) =>
 {
-    return next(context);
+    // Skip authentication for public key requests
+    if (context.Request.Path == "/rsa/key")
+    {
+        return next(context);
+    }
+    var _encryptionService = context.RequestServices.GetRequiredService<IEncryptionService>();
 
-    // // Skip authentication for public key requests
-    // if (context.Request.Path == "/rsa/key")
-    // {
-    //     return next(context);
-    // }
-    // var _encryptionService = context.RequestServices.GetRequiredService<IEncryptionService>();
+    // Read in auth token from header, assume encrypted
+    var encryptedAuthToken = context.Request.Headers["Authorization"];
+    var authToken = string.Empty;
+    if (!string.IsNullOrEmpty(encryptedAuthToken))
+    {
+        // Decrypt auth token
+        authToken = _encryptionService.Decrypt(encryptedAuthToken!);
+    }
+    else
+    {
+        // Missing auth token
+        context.Response.StatusCode = 401;
+        context.Response.WriteAsync("Missing Authorization header");
 
-    // // Read in auth token from header, assume encrypted
-    // var encryptedAuthToken = context.Request.Headers["Authorization"];
-    // var authToken = string.Empty;
-    // if (!string.IsNullOrEmpty(encryptedAuthToken))
-    // {
-    //     // Decrypt auth token
-    //     authToken = _encryptionService.Decrypt(encryptedAuthToken!);
-    // }
-    // else
-    // {
-    //     // Missing auth token
-    //     context.Response.StatusCode = 401;
-    //     context.Response.WriteAsync("Missing Authorization header");
+        return Task.CompletedTask;
+    }
 
-    //     return Task.CompletedTask;
-    // }
+    // Check if authToken is valid here
+    if (authToken == "HAOSAPIauthorizationToken")
+    {
+        // Valid auth token
+        return next(context);
+    }
+    else
+    {
+        // Invalid auth token
+        context.Response.StatusCode = 401;
+        context.Response.WriteAsync("Invalid Authorization header");
 
-    // // Check if authToken is valid here
-    // if (authToken == "HAOSAPIauthorizationToken")
-    // {
-    //     // Valid auth token
-    //     return next(context);
-    // }
-    // else
-    // {
-    //     // Invalid auth token
-    //     context.Response.StatusCode = 401;
-    //     context.Response.WriteAsync("Invalid Authorization header");
-
-    //     return Task.CompletedTask;
-    // }
+        return Task.CompletedTask;
+    }
 });
 
 RouteController routeController = new();
