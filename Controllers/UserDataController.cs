@@ -96,7 +96,7 @@ public class UserDataController : IUserDataController
         {
             return Results.Unauthorized();
         }
-        catch (KeyNotFoundException ex)
+        catch (ArgumentNullException ex)
         {
             return Results.NotFound(ex.Message);
         }
@@ -111,6 +111,10 @@ public class UserDataController : IUserDataController
         catch (DbConflictException ex)
         {
             return Results.Conflict(ex.Message);
+        }
+        catch (ArgumentNullException ex)
+        {
+            return Results.BadRequest(ex.Message);
         }
     }
     public async Task<IResult> UpdateUserInfo(UserAccount user, int id)

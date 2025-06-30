@@ -39,6 +39,7 @@ builder.Services.AddScoped<IUserDataService, UserDataService>();
 
 // Encryption services
 builder.Services.AddScoped<IEncryptionService, RsaEncryptionService>();
+builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 
 // Controllers
 builder.Services.AddScoped<IProgramController, ProgramController>();

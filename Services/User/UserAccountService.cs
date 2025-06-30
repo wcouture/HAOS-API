@@ -3,14 +3,17 @@ using HAOS.Models.Training;
 using HAOS.Models.User;
 using HAOS.Services.User;
 using Microsoft.EntityFrameworkCore;
+using RunTrackerAPI.Services;
 
 public class UserAccountService : IUserAccountService
 {
     private readonly TrainingDb _trainingDb;
+    private readonly IPasswordHasher _passwordHasher;
 
-    public UserAccountService(TrainingDb trainingDb)
+    public UserAccountService(TrainingDb trainingDb, IPasswordHasher passwordHasher)
     {
         _trainingDb = trainingDb;
+        _passwordHasher = passwordHasher;
     }
 
     public async Task<IList<UserAccount>> GetAllUsers()
@@ -30,6 +33,14 @@ public class UserAccountService : IUserAccountService
         {
             throw new DbConflictException("User already exists.");
         }
+
+        if (user.Password == null)
+        {
+            throw new ArgumentNullException("Password is required.");
+        }
+        user.Password = _passwordHasher.HashPassword(user.Password);
+
+
         user.CompletedWorkouts ??= [];
         _trainingDb.AccountData.Add(user);
         await _trainingDb.SaveChangesAsync();
@@ -40,7 +51,12 @@ public class UserAccountService : IUserAccountService
     {
         var existingUser = await _trainingDb.AccountData.FirstOrDefaultAsync(u => u.Email == user.Email) ?? throw new KeyNotFoundException("User not found.");
 
-        if (existingUser.Password != user.Password)
+        if (user.Password == null)
+        {
+            throw new ArgumentNullException("Password is required.");
+        }
+        
+        if (!_passwordHasher.VerifyPassword(existingUser.Password!, user.Password))
         {
             throw new FailedAuthenticationException("Invalid password.");
         }
