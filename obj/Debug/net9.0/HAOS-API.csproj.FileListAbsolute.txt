@@ -132,3 +132,4 @@
 /Users/williamcouture/Personal/HAOS-App/HAOS-API/obj/Debug/net9.0/HAOS-API.sourcelink.json
 /Users/williamcouture/Personal/HAOS-App/HAOS-API/bin/Debug/net9.0/MySqlConnector.dll
 /Users/williamcouture/Personal/HAOS-App/HAOS-API/bin/Debug/net9.0/Pomelo.EntityFrameworkCore.MySql.dll
+/Users/williamcouture/Personal/HAOS-App/HAOS-API/bin/Debug/net9.0/BCrypt.Net-Next.dll

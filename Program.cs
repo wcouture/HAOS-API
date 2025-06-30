@@ -141,15 +141,20 @@ app.MapGet("/", async (TrainingDb _context) =>
     var programCircuits = await _context.CircuitData.ToListAsync();
     var workouts = await _context.WorkoutData.ToListAsync();
     var exercises = await _context.ExerciseData.ToListAsync();
+    var users = await _context.AccountData.ToListAsync();
+    var completedWorkouts = await _context.CompletedWorkoutData.ToListAsync();
 
 
-    return Results.Ok(new {
+    return Results.Ok(new
+    {
         programs,
         ProgramSegments,
         programDays,
         programCircuits,
         workouts,
-        exercises
+        exercises,
+        users,
+        completedWorkouts
     });
 });
 
