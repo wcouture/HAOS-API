@@ -1,5 +1,3 @@
-using BCrypt.Net;
-
 namespace HAOS.Services.Auth;
     
 public class PasswordHasher : IPasswordHasher

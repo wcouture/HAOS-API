@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HAOS_API.Migrations.EncryptionKeyDbMigrations
 {
     [DbContext(typeof(EncryptionKeyDb))]
-    [Migration("20250624195053_InitialCreate")]
+    [Migration("20250630204511_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />

@@ -56,7 +56,7 @@ public class UserAccountService : IUserAccountService
             throw new ArgumentNullException("Password is required.");
         }
         
-        if (!_passwordHasher.VerifyPassword(existingUser.Password!, user.Password))
+        if (!_passwordHasher.VerifyPassword(user.Password, existingUser.Password!))
         {
             throw new FailedAuthenticationException("Invalid password.");
         }
@@ -70,8 +70,7 @@ public class UserAccountService : IUserAccountService
 
         var completedWorkouts = await _trainingDb.CompletedWorkoutData.Where(cw => cw.UserId == id).ToListAsync();
         _trainingDb.CompletedWorkoutData.RemoveRange(completedWorkouts);
-
-        user.SubscribedPrograms = [];
+        await _trainingDb.SaveChangesAsync();
 
         _trainingDb.AccountData.Remove(user);
         await _trainingDb.SaveChangesAsync();

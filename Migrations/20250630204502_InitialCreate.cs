@@ -15,6 +15,28 @@ namespace HAOS_API.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "AccountData",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    UserType = table.Column<int>(type: "int", nullable: false),
+                    Email = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    FirstName = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    LastName = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Password = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AccountData", x => x.Id);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "ExerciseData",
                 columns: table => new
                 {
@@ -32,6 +54,27 @@ namespace HAOS_API.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "CompletedWorkoutData",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    WorkoutId = table.Column<int>(type: "int", nullable: false),
+                    UserAccountId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CompletedWorkoutData", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CompletedWorkoutData_AccountData_UserAccountId",
+                        column: x => x.UserAccountId,
+                        principalTable: "AccountData",
+                        principalColumn: "Id");
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "ProgramData",
                 columns: table => new
                 {
@@ -40,11 +83,17 @@ namespace HAOS_API.Migrations
                     Title = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Subtitle = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    UserAccountId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ProgramData", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ProgramData_AccountData_UserAccountId",
+                        column: x => x.UserAccountId,
+                        principalTable: "AccountData",
+                        principalColumn: "Id");
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -58,6 +107,7 @@ namespace HAOS_API.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Subtitle = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
+                    ProgramId = table.Column<int>(type: "int", nullable: false),
                     TrainingProgramId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
@@ -80,6 +130,7 @@ namespace HAOS_API.Migrations
                     Title = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     WeekNum = table.Column<int>(type: "int", nullable: false),
+                    SegmentId = table.Column<int>(type: "int", nullable: false),
                     ProgramSegmentId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
@@ -99,7 +150,10 @@ namespace HAOS_API.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    ProgramDayId = table.Column<int>(type: "int", nullable: true)
+                    Rounds = table.Column<int>(type: "int", nullable: false),
+                    Description = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    ProgramDayId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -108,7 +162,8 @@ namespace HAOS_API.Migrations
                         name: "FK_CircuitData_ProgramDayData_ProgramDayId",
                         column: x => x.ProgramDayId,
                         principalTable: "ProgramDayData",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -118,11 +173,10 @@ namespace HAOS_API.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    ExerciseRefId = table.Column<int>(type: "int", nullable: true),
-                    RecommendedSets = table.Column<int>(type: "int", nullable: false),
-                    RecommendedReps = table.Column<int>(type: "int", nullable: false),
-                    RecommendedWeight = table.Column<int>(type: "int", nullable: false),
-                    CircuitId = table.Column<int>(type: "int", nullable: true)
+                    Description = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    CircuitId = table.Column<int>(type: "int", nullable: false),
+                    Exercise_Id = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -131,12 +185,14 @@ namespace HAOS_API.Migrations
                         name: "FK_WorkoutData_CircuitData_CircuitId",
                         column: x => x.CircuitId,
                         principalTable: "CircuitData",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_WorkoutData_ExerciseData_ExerciseRefId",
-                        column: x => x.ExerciseRefId,
+                        name: "FK_WorkoutData_ExerciseData_Exercise_Id",
+                        column: x => x.Exercise_Id,
                         principalTable: "ExerciseData",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -144,6 +200,16 @@ namespace HAOS_API.Migrations
                 name: "IX_CircuitData_ProgramDayId",
                 table: "CircuitData",
                 column: "ProgramDayId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CompletedWorkoutData_UserAccountId",
+                table: "CompletedWorkoutData",
+                column: "UserAccountId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProgramData_UserAccountId",
+                table: "ProgramData",
+                column: "UserAccountId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProgramDayData_ProgramSegmentId",
@@ -161,14 +227,17 @@ namespace HAOS_API.Migrations
                 column: "CircuitId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_WorkoutData_ExerciseRefId",
+                name: "IX_WorkoutData_Exercise_Id",
                 table: "WorkoutData",
-                column: "ExerciseRefId");
+                column: "Exercise_Id");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "CompletedWorkoutData");
+
             migrationBuilder.DropTable(
                 name: "WorkoutData");
 
@@ -186,6 +255,9 @@ namespace HAOS_API.Migrations
 
             migrationBuilder.DropTable(
                 name: "ProgramData");
+
+            migrationBuilder.DropTable(
+                name: "AccountData");
         }
     }
 }
