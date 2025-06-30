@@ -3,7 +3,7 @@ using HAOS.Models.Training;
 using HAOS.Models.User;
 using HAOS.Services.User;
 using Microsoft.EntityFrameworkCore;
-using RunTrackerAPI.Services;
+using HAOS.Services.Auth;
 
 public class UserAccountService : IUserAccountService
 {
