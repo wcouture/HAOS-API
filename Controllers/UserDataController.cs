@@ -129,7 +129,7 @@ public class UserDataController : IUserDataController
             return Results.NotFound(ex.Message);
         }
     }
-    
+
     public async Task<IResult> AddSubscription(int programId, int userId)
     {
         try
@@ -140,6 +140,27 @@ public class UserDataController : IUserDataController
         catch (KeyNotFoundException ex)
         {
             return Results.NotFound(ex.Message);
+        }
+        catch (DbConflictException ex)
+        {
+            return Results.Conflict(ex.Message);
+        }
+    }
+
+    public async Task<IResult> RemoveSubscription(int programId, int userId)
+    {
+        try
+        {
+            var subscribedUser = await _userAccountService.RemoveSubscription(programId, userId);
+            return Results.Ok(subscribedUser);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return Results.NotFound(ex.Message);
+        }
+        catch (DbConflictException ex)
+        {
+            return Results.Conflict(ex.Message);
         }
     }
 }

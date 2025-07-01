@@ -12,6 +12,7 @@ public interface IUserDataController
     Task<IResult> UpdateUserInfo(UserAccount user, int id);
     Task<IResult> DeleteUser(int id);
     Task<IResult> AddSubscription(int programId, int userId);
+    Task<IResult> RemoveSubscription(int programId, int userId);
 
     // CompletedWorkout functions
     Task<IResult> GetCompletedWorkouts(int userId);

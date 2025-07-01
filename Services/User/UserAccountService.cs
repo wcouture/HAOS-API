@@ -49,13 +49,13 @@ public class UserAccountService : IUserAccountService
 
     public async Task<UserAccount> Authenticate(UserAccount user)
     {
-        var existingUser = await _trainingDb.AccountData.FirstOrDefaultAsync(u => u.Email == user.Email) ?? throw new KeyNotFoundException("User not found.");
+        var existingUser = await _trainingDb.AccountData.Include(u => u.SubscribedPrograms).FirstOrDefaultAsync(u => u.Email == user.Email) ?? throw new KeyNotFoundException("User not found.");
 
         if (user.Password == null)
         {
             throw new ArgumentNullException("Password is required.");
         }
-        
+
         if (!_passwordHasher.VerifyPassword(user.Password, existingUser.Password!))
         {
             throw new FailedAuthenticationException("Invalid password.");
@@ -101,8 +101,28 @@ public class UserAccountService : IUserAccountService
         var user = await _trainingDb.AccountData.FirstOrDefaultAsync(u => u.Id == userId) ?? throw new KeyNotFoundException("User not found.");
         var program = await _trainingDb.ProgramData.FirstOrDefaultAsync(p => p.Id == programId) ?? throw new KeyNotFoundException("Program not found.");
 
+        if (user.SubscribedPrograms?.Any(p => p.Id == programId) ?? false)
+        {
+            throw new DbConflictException("User already subscribed to this program.");
+        }
+
         user.SubscribedPrograms ??= [];
         user.SubscribedPrograms.Add(program);
+        await _trainingDb.SaveChangesAsync();
+        return user;
+    }
+    
+    public async Task<UserAccount> RemoveSubscription(int programId, int userId)
+    {
+        var user = await _trainingDb.AccountData.FirstOrDefaultAsync(u => u.Id == userId) ?? throw new KeyNotFoundException("User not found.");
+        var program = await _trainingDb.ProgramData.FirstOrDefaultAsync(p => p.Id == programId) ?? throw new KeyNotFoundException("Program not found.");
+
+        if (!user.SubscribedPrograms?.Any(p => p.Id == programId) ?? false)
+        {
+            throw new DbConflictException("User is not subscribed to this program.");
+        }
+
+        user.SubscribedPrograms?.Remove(program);
         await _trainingDb.SaveChangesAsync();
         return user;
     }
