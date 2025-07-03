@@ -20,4 +20,8 @@ public class UserAccount
 
     public List<TrainingProgram>? SubscribedPrograms { get; set; }
     public List<CompletedWorkout>? CompletedWorkouts { get; set; }
+    public List<int>? CompletedCircuits { get; set; }
+    public List<int>? CompletedDays { get; set; }
+    public List<int>? CompletedSegments { get; set; }
+    public List<int>? CompletedPrograms { get; set; }
 }

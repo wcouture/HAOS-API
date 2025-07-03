@@ -163,4 +163,140 @@ public class UserDataController : IUserDataController
             return Results.Conflict(ex.Message);
         }
     }
+
+    public async Task<IResult> AddCompletedCircuit(int completedCircuitId, int userId)
+    {
+        try
+        {
+            var subscribedUser = await _userDataService.AddCompletedCircuit(completedCircuitId, userId);
+            return Results.Ok(subscribedUser);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return Results.NotFound(ex.Message);
+        }
+        catch (DbConflictException ex)
+        {
+            return Results.Conflict(ex.Message);
+        }
+    }
+
+    public async Task<IResult> RemoveCompletedCircuit(int completedCircuitId, int userId)
+    {
+        try
+        {
+            var subscribedUser = await _userDataService.RemoveCompletedCircuit(completedCircuitId, userId);
+            return Results.Ok(subscribedUser);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return Results.NotFound(ex.Message);
+        }
+        catch (DbConflictException ex)
+        {
+            return Results.Conflict(ex.Message);
+        }
+    }
+
+    public async Task<IResult> AddCompletedDay(int completedDayId, int userId)
+    {
+        try
+        {
+            var subscribedUser = await _userDataService.AddCompletedDay(completedDayId, userId);
+            return Results.Ok(subscribedUser);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return Results.NotFound(ex.Message);
+        }
+        catch (DbConflictException ex)
+        {
+            return Results.Conflict(ex.Message);
+        }
+    }
+
+    public async Task<IResult> RemoveCompletedDay(int completedDayId, int userId)
+    {
+        try
+        {
+            var subscribedUser = await _userDataService.RemoveCompletedDay(completedDayId, userId);
+            return Results.Ok(subscribedUser);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return Results.NotFound(ex.Message);
+        }
+        catch (DbConflictException ex)
+        {
+            return Results.Conflict(ex.Message);
+        }
+    }
+
+    public async Task<IResult> AddCompletedSegment(int completedSegmentId, int userId)
+    {
+        try
+        {
+            var subscribedUser = await _userDataService.AddCompletedSegment(completedSegmentId, userId);
+            return Results.Ok(subscribedUser);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return Results.NotFound(ex.Message);
+        }
+        catch (DbConflictException ex)
+        {
+            return Results.Conflict(ex.Message);
+        }
+    }
+
+    public async Task<IResult> RemoveCompletedSegment(int completedSegmentId, int userId)
+    {
+        try
+        {
+            var subscribedUser = await _userDataService.RemoveCompletedSegment(completedSegmentId, userId);
+            return Results.Ok(subscribedUser);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return Results.NotFound(ex.Message);
+        }
+        catch (DbConflictException ex)
+        {
+            return Results.Conflict(ex.Message);
+        }
+    }
+
+    public async Task<IResult> AddCompletedProgram(int completedProgramId, int userId)
+    {
+        try
+        {
+            var subscribedUser = await _userDataService.AddCompletedProgram(completedProgramId, userId);
+            return Results.Ok(subscribedUser);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return Results.NotFound(ex.Message);
+        }
+        catch (DbConflictException ex)
+        {
+            return Results.Conflict(ex.Message);
+        }
+    }
+
+    public async Task<IResult> RemoveCompletedProgram(int completedProgramId, int userId)
+    {
+        try
+        {
+            var subscribedUser = await _userDataService.RemoveCompletedProgram(completedProgramId, userId);
+            return Results.Ok(subscribedUser);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return Results.NotFound(ex.Message);
+        }
+        catch (DbConflictException ex)
+        {
+            return Results.Conflict(ex.Message);
+        }
+    }
 }

@@ -47,6 +47,9 @@ public class RouteController : IRouteController
         app.MapDelete("/programs/delete/{id}", async (IProgramController programController, int id) => await programController.DeleteProgram(id));
         app.MapPut("/programs/update/{id}", async (IProgramController programController, TrainingProgram updatedProgram, int id) => await programController.UpdateProgram(updatedProgram, id));
         app.MapGet("/programs/find/{id}", async (IProgramController programController, int id) => await programController.GetProgramById(id));
+
+        app.MapPost("/programs/complete/{user_id}/{program_id}", async (IUserDataController userDataController, int user_id, int program_id) => await userDataController.AddCompletedProgram(program_id, user_id));
+        app.MapDelete("/programs/uncomplete/{user_id}/{program_id}", async (IUserDataController userDataController, int user_id, int program_id) => await userDataController.RemoveCompletedProgram(program_id, user_id));
     }
 
     private void MapSegmentEndpoints(WebApplication app)
@@ -57,6 +60,8 @@ public class RouteController : IRouteController
         app.MapPut("/segments/update/{id}", async (IProgramController programController, ProgramSegment updatedProgramSegment, int id) => await programController.UpdateProgramSegment(updatedProgramSegment, id));
         app.MapGet("/segments/find/{id}", async (IProgramController programController, int id) => await programController.GetProgramSegmentById(id));
 
+        app.MapPost("/segments/complete/{user_id}/{segment_id}", async (IUserDataController userDataController, int user_id, int segment_id) => await userDataController.AddCompletedSegment(segment_id, user_id));
+        app.MapDelete("/segments/uncomplete/{user_id}/{segment_id}", async (IUserDataController userDataController, int user_id, int segment_id) => await userDataController.RemoveCompletedSegment(segment_id, user_id));
     }
 
     private void MapDayEndpoints(WebApplication app)
@@ -67,6 +72,8 @@ public class RouteController : IRouteController
         app.MapPut("/days/update/{id}", async (IProgramController programController, ProgramDay updatedProgramDay, int id) => await programController.UpdateProgramDay(updatedProgramDay, id));
         app.MapGet("/days/find/{id}", async (IProgramController programController, int id) => await programController.GetProgramDayById(id));
 
+        app.MapPost("/days/complete/{user_id}/{day_id}", async (IUserDataController userDataController, int user_id, int day_id) => await userDataController.AddCompletedDay(day_id, user_id));
+        app.MapDelete("/days/uncomplete/{user_id}/{day_id}", async (IUserDataController userDataController, int user_id, int day_id) => await userDataController.RemoveCompletedDay(day_id, user_id));
     }
 
     private void MapCircuitEndpoints(WebApplication app)
@@ -76,6 +83,9 @@ public class RouteController : IRouteController
         app.MapDelete("/circuits/delete/{programDayId}/{id}", async (IProgramController programController, int programDayId, int id) => await programController.DeleteCircuit(programDayId, id));
         app.MapGet("/circuits/find/{id}", async (IProgramController programController, int id) => await programController.GetCircuitById(id));
         app.MapPut("/circuits/update/{id}", async (IProgramController programController, Circuit updatedCircuit, int id) => await programController.UpdateCircuit(updatedCircuit, id));
+
+        app.MapPost("/circuits/complete/{user_id}/{circuit_id}", async (IUserDataController userDataController, int user_id, int circuit_id) => await userDataController.AddCompletedCircuit(circuit_id, user_id));
+        app.MapDelete("/circuits/uncomplete/{user_id}/{circuit_id}", async (IUserDataController userDataController, int user_id, int circuit_id) => await userDataController.RemoveCompletedCircuit(circuit_id, user_id));
     }
 
     private void MapWorkoutEndpoints(WebApplication app)

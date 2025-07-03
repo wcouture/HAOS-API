@@ -42,6 +42,11 @@ public class UserAccountService : IUserAccountService
 
 
         user.CompletedWorkouts ??= [];
+        user.CompletedCircuits ??= [];
+        user.CompletedDays ??= [];
+        user.CompletedSegments ??= [];
+        user.CompletedPrograms ??= [];
+        
         _trainingDb.AccountData.Add(user);
         await _trainingDb.SaveChangesAsync();
         return user;
