@@ -109,7 +109,7 @@ public class UserDataService : IUserDataService
         var user = await _trainingDb.AccountData.FirstOrDefaultAsync(u => u.Id == userId) ?? throw new KeyNotFoundException("User not found.");
         completedWorkout.UserId = user.Id;
 
-        if (user.CompletedWorkouts?.Any(cw => cw.Id == completedWorkout.Id) ?? false)
+        if (user.CompletedWorkouts?.Any(cw => cw.WorkoutId == completedWorkout.WorkoutId) ?? false)
         {
             throw new DbConflictException("User already completed this workout.");
         }
@@ -127,6 +127,7 @@ public class UserDataService : IUserDataService
         var completedWorkout = await _trainingDb.CompletedWorkoutData.FirstOrDefaultAsync(cw => cw.Id == completedWorkoutId && cw.UserId == userId) ?? throw new KeyNotFoundException("Completed workout not found.");
 
         user.CompletedWorkouts!.Remove(completedWorkout);
+        _trainingDb.CompletedWorkoutData.Remove(completedWorkout);
         await _trainingDb.SaveChangesAsync();
         return completedWorkout;
     }
