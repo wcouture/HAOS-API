@@ -84,7 +84,7 @@ public class UserAccountService : IUserAccountService
 
     public async Task<UserAccount> GetUserInfo(int id)
     {
-        var user = await _trainingDb.AccountData.Include(u => u.SubscribedPrograms).FirstOrDefaultAsync(u => u.Id == id) ?? throw new KeyNotFoundException("User not found.");
+        var user = await _trainingDb.AccountData.Include(u => u.SubscribedPrograms).Include(u => u.CompletedWorkouts).FirstOrDefaultAsync(u => u.Id == id) ?? throw new KeyNotFoundException("User not found.");
         user.Password = null;
         return user;
     }
