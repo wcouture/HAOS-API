@@ -39,6 +39,7 @@ public class ProgramCircuitService : IProgramCircuitService
     public async Task<Circuit> GetCircuit(int circuitId)
     {
         var circuit = await _context.CircuitData.Include(c => c.Workouts).FirstOrDefaultAsync(c => c.Id == circuitId) ?? throw new KeyNotFoundException("Circuit not found.");
+        await _context.ExerciseData.LoadAsync();
         return circuit;
     }
 

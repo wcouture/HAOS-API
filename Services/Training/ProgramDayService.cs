@@ -51,7 +51,7 @@ public class ProgramDayService : IProgramDayService
 
     public async Task<ProgramDay> GetProgramDay(int id)
     {
-        var day = await _context.ProgramDayData.FirstOrDefaultAsync(d => d.Id == id) ?? throw new KeyNotFoundException("Day not found.");
+        var day = await _context.ProgramDayData.Include(d => d.Circuits).FirstOrDefaultAsync(d => d.Id == id) ?? throw new KeyNotFoundException("Day not found.");
         return day;
     }
 

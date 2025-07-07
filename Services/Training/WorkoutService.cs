@@ -44,7 +44,7 @@ public class WorkoutService : IWorkoutService
 
     public async Task<Workout> GetWorkout(int id)
     {
-        var workout = await _context.WorkoutData.FirstOrDefaultAsync(w => w.Id == id) ?? throw new KeyNotFoundException("Workout not found.");
+        var workout = await _context.WorkoutData.Include(w => w.Exercise_).FirstOrDefaultAsync(w => w.Id == id) ?? throw new KeyNotFoundException("Workout not found.");
         return workout;
     }
 
