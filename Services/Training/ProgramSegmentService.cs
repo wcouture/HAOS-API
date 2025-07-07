@@ -57,7 +57,7 @@ public class ProgramSegmentService : IProgramSegmentService
 
     public async Task<ProgramSegment> GetProgramSegment(int id)
     {
-        var programSegment = await _context.SegmentData.FirstOrDefaultAsync(ps => ps.Id == id) ?? throw new KeyNotFoundException("Segment not found.");
+        var programSegment = await _context.SegmentData.Include(s => s.Days).FirstOrDefaultAsync(ps => ps.Id == id) ?? throw new KeyNotFoundException("Segment not found.");
         return programSegment;
     }
 
