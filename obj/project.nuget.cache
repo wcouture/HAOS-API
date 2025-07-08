@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "zmDLAUDHFd0=",
+  "dgSpecHash": "gCLmHHAwSE8=",
   "success": true,
-  "projectFilePath": "/Users/williamcouture/Personal/HAOS-App/HAOS-API/HAOS-API.csproj",
+  "projectFilePath": "/Users/williamcouture/Personal/HAOS/HAOS-API/HAOS-API.csproj",
   "expectedPackageFiles": [
     "/Users/williamcouture/.nuget/packages/bcrypt.net-next/4.0.3/bcrypt.net-next.4.0.3.nupkg.sha512",
     "/Users/williamcouture/.nuget/packages/humanizer.core/2.14.1/humanizer.core.2.14.1.nupkg.sha512",

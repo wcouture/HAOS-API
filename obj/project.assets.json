@@ -3113,11 +3113,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/williamcouture/Personal/HAOS-App/HAOS-API/HAOS-API.csproj",
+      "projectUniqueName": "/Users/williamcouture/Personal/HAOS/HAOS-API/HAOS-API.csproj",
       "projectName": "HAOS-API",
-      "projectPath": "/Users/williamcouture/Personal/HAOS-App/HAOS-API/HAOS-API.csproj",
+      "projectPath": "/Users/williamcouture/Personal/HAOS/HAOS-API/HAOS-API.csproj",
       "packagesPath": "/Users/williamcouture/.nuget/packages/",
-      "outputPath": "/Users/williamcouture/Personal/HAOS-App/HAOS-API/obj/",
+      "outputPath": "/Users/williamcouture/Personal/HAOS/HAOS-API/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/Users/williamcouture/.nuget/NuGet/NuGet.Config"
