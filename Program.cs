@@ -95,7 +95,7 @@ app.Use((context, next) =>
     {
         return next(context);
     }
-    var _encryptionService = context.RequestServices.GetRequiredService<IEncryptionService>();
+    //var _encryptionService = context.RequestServices.GetRequiredService<IEncryptionService>();
 
     // Read in auth token from header, assume encrypted
     var encryptedAuthToken = context.Request.Headers["Authorization"];
