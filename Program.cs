@@ -71,6 +71,9 @@ using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<TrainingDb>();
     db.Database.EnsureCreated();
+
+    var db2 = scope.ServiceProvider.GetRequiredService<EncryptionKeyDb>();
+    db.Database.EnsureCreated();
 }
 
 // Configure the HTTP request pipeline.
