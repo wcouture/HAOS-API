@@ -61,6 +61,8 @@ public class WorkoutService : IWorkoutService
 
         existingWorkout.Exercise_ = workout.Exercise_;    
         existingWorkout.Description = workout.Description;
+        existingWorkout.Rounds = workout.Rounds;
+        existingWorkout.TrackingType_ = workout.TrackingType_;
 
         await _context.SaveChangesAsync();
         return existingWorkout;

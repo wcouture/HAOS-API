@@ -38,7 +38,10 @@ public class ProgramSegmentService : IProgramSegmentService
         var deletedDays = segment.Days;
         var dayIds = deletedDays.Select(d => d.Id).ToList();
 
-        var deletedCircuits = await _context.CircuitData.Where(c => dayIds.Contains(c.ProgramDayId)).ToListAsync();
+        var deletedSessions = await _context.SessionData.Where(s => dayIds.Contains(s.ProgramDayId)).ToListAsync();
+        var sessionIds = deletedSessions.Select(s => s.Id).ToList();
+
+        var deletedCircuits = await _context.CircuitData.Where(c => sessionIds.Contains(c.SessionId)).ToListAsync();
         var circuitIds = deletedCircuits.Select(c => c.Id).ToList();
 
         var deletedWorkouts = await _context.WorkoutData.Where(w => circuitIds.Contains(w.CircuitId)).ToListAsync();

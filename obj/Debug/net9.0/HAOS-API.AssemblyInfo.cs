@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("HAOS-API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+298f024137d23c2ca93c37109e65c2f1e073f048")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+85514cd10b497d272f51b685b4d9ca957bae2d49")]
 [assembly: System.Reflection.AssemblyProductAttribute("HAOS-API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("HAOS-API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

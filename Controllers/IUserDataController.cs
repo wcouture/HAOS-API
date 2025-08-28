@@ -22,6 +22,9 @@ public interface IUserDataController
     Task<IResult> AddCompletedCircuit(int completedCircuitId, int userId);
     Task<IResult> RemoveCompletedCircuit(int completedCircuitId, int userId);
 
+    Task<IResult> AddCompletedSession(int completedSessionId, int userId);
+    Task<IResult> RemoveCompletedSession(int completedSessionId, int userId);
+
     Task<IResult> AddCompletedDay(int completedDayId, int userId);
     Task<IResult> RemoveCompletedDay(int completedDayId, int userId);
 

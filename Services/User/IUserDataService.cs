@@ -10,6 +10,9 @@ public interface IUserDataService
 
     Task<UserAccount> AddCompletedCircuit(int completedCircuitId, int userId);
     Task<UserAccount> RemoveCompletedCircuit(int completedCircuitId, int userId);
+
+    Task<UserAccount> AddCompletedSession(int completedSessionId, int userId);
+    Task<UserAccount> RemoveCompletedSession(int completedSessionId, int userId);
     
     Task<UserAccount> AddCompletedDay(int completedDayId, int userId);
     Task<UserAccount> RemoveCompletedDay(int completedDayId, int userId);

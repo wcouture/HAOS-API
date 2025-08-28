@@ -76,11 +76,23 @@ public class RouteController : IRouteController
         app.MapDelete("/days/uncomplete/{user_id}/{day_id}", async (IUserDataController userDataController, int user_id, int day_id) => await userDataController.RemoveCompletedDay(day_id, user_id));
     }
 
+    private void MapSessionEndpoints(WebApplication app)
+    {
+        app.MapGet("/sessions/all/{dayId}", async (IProgramController programController, int dayId) => await programController.GetProgramSessions(dayId));
+        app.MapPost("/sessions/add/{dayId}", async (IProgramController programController, Session newSession, int dayId) => await programController.AddProgramSession(newSession, dayId));
+        app.MapDelete("/sessions/delete/{id}", async (IProgramController programController, int id) => await programController.DeleteProgramSession(id));
+        app.MapPut("/sessions/update/{id}", async (IProgramController programController, Session updatedSession, int id) => await programController.UpdateProgramSession(updatedSession, id));
+        app.MapGet("/sessions/find/{id}", async (IProgramController programController, int id) => await programController.GetProgramSessionById(id));
+
+        app.MapPost("/sessions/complete/{user_id}/{session_id}", async (IUserDataController userDataController, int user_id, int session_id) => await userDataController.AddCompletedSession(session_id, user_id));
+        app.MapDelete("/sessions/uncomplete/{user_id}/{session_id}", async (IUserDataController userDataController, int user_id, int session_id) => await userDataController.RemoveCompletedSession(session_id, user_id));
+    }
+
     private void MapCircuitEndpoints(WebApplication app)
     {
-        app.MapGet("/circuits/all/{programDayId}", async (IProgramController programController, int programDayId) => await programController.GetCircuits(programDayId));
-        app.MapPost("/circuits/add/{programDayId}", async (IProgramController programController, Circuit newCircuit, int programDayId) => await programController.AddCircuit(newCircuit, programDayId));
-        app.MapDelete("/circuits/delete/{programDayId}/{id}", async (IProgramController programController, int programDayId, int id) => await programController.DeleteCircuit(programDayId, id));
+        app.MapGet("/circuits/all/{sessionId}", async (IProgramController programController, int sessionId) => await programController.GetCircuits(sessionId));
+        app.MapPost("/circuits/add/{sessionId}", async (IProgramController programController, Circuit newCircuit, int sessionId) => await programController.AddCircuit(newCircuit, sessionId));
+        app.MapDelete("/circuits/delete/{sessionId}/{id}", async (IProgramController programController, int sessionId, int id) => await programController.DeleteCircuit(sessionId, id));
         app.MapGet("/circuits/find/{id}", async (IProgramController programController, int id) => await programController.GetCircuitById(id));
         app.MapPut("/circuits/update/{id}", async (IProgramController programController, Circuit updatedCircuit, int id) => await programController.UpdateCircuit(updatedCircuit, id));
 

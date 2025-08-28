@@ -25,6 +25,13 @@ public interface IProgramController
     Task<IResult> UpdateProgramDay(ProgramDay programDay, int id);
     Task<IResult> DeleteProgramDay(int segmentId, int id);
 
+    // Session Data
+    Task<IResult> AddProgramSession(Session session, int dayId);
+    Task<IResult> GetProgramSessions(int dayId);
+    Task<IResult> GetProgramSessionById(int id);
+    Task<IResult> UpdateProgramSession(Session session, int id);
+    Task<IResult> DeleteProgramSession(int id);
+
     // Circuit Data
     Task<IResult> GetCircuits(int dayId);
     Task<IResult> GetCircuitById(int id);

@@ -56,7 +56,10 @@ public class ProgramService : IProgramService
         var deletedProgramDays = await _context.ProgramDayData.Where(p => segmentIds.Contains(p.SegmentId)).ToListAsync();
         var dayIds = deletedProgramDays.Select(d => d.Id).ToList();
 
-        var deletedCircuits = await _context.CircuitData.Where(c => dayIds.Contains(c.ProgramDayId)).ToListAsync();
+        var deletedSessions = await _context.SessionData.Where(s => dayIds.Contains(s.ProgramDayId)).ToListAsync();
+        var sessionIds = deletedSessions.Select(s => s.Id).ToList();
+
+        var deletedCircuits = await _context.CircuitData.Where(c => sessionIds.Contains(c.SessionId)).ToListAsync();
         var circuitIds = deletedCircuits.Select(c => c.Id).ToList();
 
         var deletedWorkouts = await _context.WorkoutData.Where(w => circuitIds.Contains(w.CircuitId)).ToListAsync();
@@ -64,6 +67,7 @@ public class ProgramService : IProgramService
 
         _context.WorkoutData.RemoveRange(deletedWorkouts);
         _context.CircuitData.RemoveRange(deletedCircuits);
+        _context.SessionData.RemoveRange(deletedSessions);
         _context.ProgramDayData.RemoveRange(deletedProgramDays);
         _context.SegmentData.RemoveRange(deletedSegments);
 
@@ -94,6 +98,7 @@ public class ProgramService : IProgramService
         var program = await _context.ProgramData.FirstOrDefaultAsync(p => p.Id == id) ?? throw new KeyNotFoundException("Program not found.");
         await _context.SegmentData.LoadAsync();
         await _context.ProgramDayData.LoadAsync();
+        await _context.SessionData.LoadAsync();
         await _context.CircuitData.LoadAsync();
         await _context.WorkoutData.LoadAsync();
         await _context.ExerciseData.LoadAsync();

@@ -8,5 +8,5 @@ public class ProgramDay {
     public string? Title { get; set; }
     public int WeekNum { get; set; }
     public int SegmentId { get; set; }
-    public IList<Circuit> Circuits { get; set; } = new List<Circuit>();
+    public IList<Session> Sessions { get; set; } = new List<Session>();
 }

@@ -35,6 +35,28 @@ public class UserDataService : IUserDataService
         return user;
     }
 
+    public async Task<UserAccount> AddCompletedSession(int completedSessionId, int userId)
+    {
+        var user = await _trainingDb.AccountData.FirstOrDefaultAsync(u => u.Id == userId) ?? throw new KeyNotFoundException("User not found.");
+
+        if (user.CompletedSessions?.Any(s => s == completedSessionId) ?? false)
+        {
+            throw new DbConflictException("User already completed this session.");
+        }
+
+        user.CompletedSessions ??= [];
+        user.CompletedSessions.Add(completedSessionId);
+        _trainingDb.SaveChanges();
+        return user;
+    }
+    public async Task<UserAccount> RemoveCompletedSession(int completedSessionId, int userId)
+    {
+        var user = await _trainingDb.AccountData.FirstOrDefaultAsync(u => u.Id == userId) ?? throw new KeyNotFoundException("User not found.");
+        user.CompletedSessions?.Remove(completedSessionId);
+        _trainingDb.SaveChanges();
+        return user;
+    }
+
     public async Task<UserAccount> AddCompletedDay(int completedDayId, int userId)
     {
         var user = await _trainingDb.AccountData.FirstOrDefaultAsync(u => u.Id == userId) ?? throw new KeyNotFoundException("User not found.");

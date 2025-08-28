@@ -198,6 +198,40 @@ public class UserDataController : IUserDataController
         }
     }
 
+    public async Task<IResult> AddCompletedSession(int completedSessionId, int userId)
+    {
+        try
+        {
+            var subscribedUser = await _userDataService.AddCompletedSession(completedSessionId, userId);
+            return Results.Ok(subscribedUser);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return Results.NotFound(ex.Message);
+        }
+        catch (DbConflictException ex)
+        {
+            return Results.Conflict(ex.Message);
+        }
+    }
+
+    public async Task<IResult> RemoveCompletedSession(int completedSessionId, int userId)
+    {
+        try
+        {
+            var subscribedUser = await _userDataService.RemoveCompletedSession(completedSessionId, userId);
+            return Results.Ok(subscribedUser);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return Results.NotFound(ex.Message);
+        }
+        catch (DbConflictException ex)
+        {
+            return Results.Conflict(ex.Message);
+        }
+    }
+
     public async Task<IResult> AddCompletedDay(int completedDayId, int userId)
     {
         try

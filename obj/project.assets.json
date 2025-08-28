@@ -3108,23 +3108,26 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\boxer\\.nuget\\packages\\": {},
+    "C:\\Users\\wpc\\.nuget\\packages\\": {},
+    "C:\\Program Files\\DevExpress 23.1\\Components\\Offline Packages": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\boxer\\source\\repos\\DOTNET\\HAOS-API\\HAOS-API.csproj",
+      "projectUniqueName": "C:\\Users\\wpc\\HAOS\\HAOS-API\\HAOS-API.csproj",
       "projectName": "HAOS-API",
-      "projectPath": "C:\\Users\\boxer\\source\\repos\\DOTNET\\HAOS-API\\HAOS-API.csproj",
-      "packagesPath": "C:\\Users\\boxer\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\boxer\\source\\repos\\DOTNET\\HAOS-API\\obj\\",
+      "projectPath": "C:\\Users\\wpc\\HAOS\\HAOS-API\\HAOS-API.csproj",
+      "packagesPath": "C:\\Users\\wpc\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\wpc\\HAOS\\HAOS-API\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
+        "C:\\Program Files\\DevExpress 23.1\\Components\\Offline Packages",
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\boxer\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\wpc\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\DevExpress 23.1.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -3133,8 +3136,9 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Program Files\\DevExpress 23.1\\Components\\System\\Components\\Packages": {},
         "C:\\Program Files\\dotnet\\library-packs": {},
-        "https://api.nuget.org/v3/index.json": {}
+        "https://nuget.devexpress.com/bNdjkMEHALg6h8NkroikgL3p4mwE74Vs7MoJcxI7hgAegslVTR/api/v3/index.json": {}
       },
       "frameworks": {
         "net9.0": {
@@ -3206,7 +3210,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.301/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.302/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

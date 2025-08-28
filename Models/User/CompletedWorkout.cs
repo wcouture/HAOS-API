@@ -1,3 +1,5 @@
+using HAOS.Models.Training;
+
 namespace HAOS.Models.User;
 
 public class CompletedWorkout
@@ -6,6 +8,6 @@ public class CompletedWorkout
     public int UserId { get; set; }
     public int WorkoutId { get; set; }
     public DateTime CompletedDate { get; set; }
-    public int WeightUsed { get; set; }
-    public int Duration { get; set; }
+    public TrackingType TrackingType_ { get; set; }
+    public IList<int> Metrics { get; set; } = new List<int>();
 }

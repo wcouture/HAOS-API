@@ -11,25 +11,25 @@ public class ProgramCircuitService : IProgramCircuitService
         _context = context;
     }
 
-    public async Task<Circuit> CreateCircuit(Circuit circuit, int programDayId)
+    public async Task<Circuit> CreateCircuit(Circuit circuit, int sessionId)
     {
-        circuit.ProgramDayId = programDayId;
-        var programDay = await _context.ProgramDayData.Include(p => p.Circuits).FirstOrDefaultAsync(p => p.Id == programDayId) ?? throw new KeyNotFoundException("Program day not found.");
+        circuit.SessionId = sessionId;
+        var session = await _context.SessionData.Include(s => s.Circuits).FirstOrDefaultAsync(s => s.Id == sessionId) ?? throw new KeyNotFoundException("Program session not found.");
 
-        programDay.Circuits?.Add(circuit);
+        session.Circuits?.Add(circuit);
         await _context.SaveChangesAsync();
         return circuit;
     }
 
-    public async Task<Circuit> DeleteCircuit(int programDayId, int circuitId)
+    public async Task<Circuit> DeleteCircuit(int sessionId, int circuitId)
     {
-        var programDay = await _context.ProgramDayData.Include(p => p.Circuits).FirstOrDefaultAsync(p => p.Id == programDayId) ?? throw new KeyNotFoundException("Program day not found.");
+        var session = await _context.SessionData.Include(s => s.Circuits).FirstOrDefaultAsync(s => s.Id == sessionId) ?? throw new KeyNotFoundException("Program session not found.");
         var circuit = _context.CircuitData.Include(c => c.Workouts).FirstOrDefault(c => c.Id == circuitId) ?? throw new KeyNotFoundException("Circuit not found.");
 
         var deletedWorkouts = circuit.Workouts;
         var workoutIds = deletedWorkouts.Select(w => w.Id).ToList();
 
-        programDay.Circuits?.Remove(circuit);
+        session.Circuits?.Remove(circuit);
         _context.WorkoutData.RemoveRange(deletedWorkouts);
         _context.CircuitData.Remove(circuit);
         await _context.SaveChangesAsync();
@@ -43,24 +43,23 @@ public class ProgramCircuitService : IProgramCircuitService
         return circuit;
     }
 
-    public async Task<IList<Circuit>> GetCircuits(int programDayId)
+    public async Task<IList<Circuit>> GetCircuits(int sessionId)
     {
-        var programDay = await _context.ProgramDayData.Include(p => p.Circuits).FirstOrDefaultAsync(p => p.Id == programDayId) ?? throw new KeyNotFoundException("Program day not found.");
+        var session = await _context.SessionData.Include(s => s.Circuits).FirstOrDefaultAsync(s => s.Id == sessionId) ?? throw new KeyNotFoundException("Program session not found.");
 
-        foreach (var circuit in programDay.Circuits)
+        foreach (var circuit in session.Circuits)
         {
             var circ = await GetCircuit(circuit.Id);
             circuit.Workouts = circ.Workouts;
         }
 
-        return programDay.Circuits;
+        return session.Circuits;
     }
 
     public async Task<Circuit> UpdateCircuit(Circuit circuit, int circuitId)
     {
         var existingCircuit = await _context.CircuitData.FirstOrDefaultAsync(c => c.Id == circuitId) ?? throw new KeyNotFoundException("Circuit not found.");
         existingCircuit.Description = circuit.Description;
-        existingCircuit.Rounds = circuit.Rounds;
         await _context.SaveChangesAsync();
         return existingCircuit;
     }

@@ -9,15 +9,17 @@ public class ProgramController : IProgramController
     private readonly IProgramService _programService;
     private readonly IProgramSegmentService _programSegmentService;
     private readonly IProgramDayService _programDayService;
+    private readonly IProgramSessionService _programSessionService;
     private readonly IProgramCircuitService _programCircuitService;
     private readonly IWorkoutService _workoutService;
     private readonly IExerciseService _exerciseService;
 
-    public ProgramController(IProgramService programService, IProgramSegmentService programSegmentService, IProgramDayService programDayService, IProgramCircuitService programCircuitService, IWorkoutService workoutService, IExerciseService exerciseService)
+    public ProgramController(IProgramService programService, IProgramSegmentService programSegmentService, IProgramDayService programDayService, IProgramSessionService programSessionService, IProgramCircuitService programCircuitService, IWorkoutService workoutService, IExerciseService exerciseService)
     {
         _programService = programService;
         _programSegmentService = programSegmentService;
         _programDayService = programDayService;
+        _programSessionService = programSessionService;
         _programCircuitService = programCircuitService;
         _workoutService = workoutService;
         _exerciseService = exerciseService;
@@ -210,12 +212,90 @@ public class ProgramController : IProgramController
         }
     }
 
-    // Program Circuit CRUD
-    public async Task<IResult> AddCircuit(Circuit circuit, int dayId)
+    // Program Session CRUD
+    public async Task<IResult> AddProgramSession(Session session, int dayId)
     {
         try
         {
-            var newCircuit = await _programCircuitService.CreateCircuit(circuit, dayId);
+            var newSession = await _programSessionService.CreateSessionAsync(session);
+            return Results.Created($"/sessions/find/{newSession.Id}", newSession);
+        }
+        catch (DbConflictException ex)
+        {
+            return Results.Conflict(ex.Message);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return Results.NotFound(ex.Message);
+        }
+    }
+
+    public async Task<IResult> DeleteProgramSession(int id)
+    {
+        try
+        {
+            var deletedSession = await _programSessionService.DeleteSessionAsync(id);
+            if (deletedSession)
+            {
+                return Results.Ok();
+            }
+            else
+            {
+                return Results.NotFound("Session not found.");
+            }
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return Results.NotFound(ex.Message);
+        }
+    }
+    
+    public async Task<IResult> GetProgramSessionById(int id)
+    {
+        try
+        {
+            var session = await _programSessionService.GetSessionByIdAsync(id);
+            return Results.Ok(session);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return Results.NotFound(ex.Message);
+        }
+    }
+    
+    public async Task<IResult> GetProgramSessions(int dayId)
+    {
+        try
+        {
+            var sessions = await _programSessionService.GetSessionsByProgramDayIdAsync(dayId);
+            return Results.Ok(sessions);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return Results.NotFound(ex.Message);
+        }
+    }
+
+    public async Task<IResult> UpdateProgramSession(Session session, int id)
+    {
+        try
+        {
+            var updatedSession = await _programSessionService.UpdateSessionAsync(session);
+            return Results.Ok(updatedSession);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return Results.NotFound(ex.Message);
+        }
+    }
+
+
+    // Program Circuit CRUD
+    public async Task<IResult> AddCircuit(Circuit circuit, int sessionId)
+    {
+        try
+        {
+            var newCircuit = await _programCircuitService.CreateCircuit(circuit, sessionId);
             return Results.Created($"/circuits/find/{newCircuit.Id}", newCircuit);
         }
         catch (DbConflictException ex)
@@ -227,11 +307,11 @@ public class ProgramController : IProgramController
             return Results.NotFound(ex.Message);
         }
     }
-    public async Task<IResult> DeleteCircuit(int dayId, int id)
+    public async Task<IResult> DeleteCircuit(int sessionId, int id)
     {
         try
         {
-            var deletedCircuit = await _programCircuitService.DeleteCircuit(dayId, id);
+            var deletedCircuit = await _programCircuitService.DeleteCircuit(sessionId, id);
             return Results.Ok(deletedCircuit);
         }
         catch (KeyNotFoundException ex)
@@ -251,11 +331,11 @@ public class ProgramController : IProgramController
             return Results.NotFound(ex.Message);
         }
     }
-    public async Task<IResult> GetCircuits(int dayId)
+    public async Task<IResult> GetCircuits(int sessionId)
     {
         try
         {
-            var circuits = await _programCircuitService.GetCircuits(dayId);
+            var circuits = await _programCircuitService.GetCircuits(sessionId);
             return Results.Ok(circuits);
         }
         catch (KeyNotFoundException ex)
