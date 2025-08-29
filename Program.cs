@@ -28,6 +28,7 @@ builder.Services.AddDbContext<TrainingDb>(
 // Training program services
 builder.Services.AddScoped<IProgramService, ProgramService>();
 builder.Services.AddScoped<IProgramSegmentService, ProgramSegmentService>();
+builder.Services.AddScoped<IProgramSessionService, ProgramSessionService>();
 builder.Services.AddScoped<IProgramDayService, ProgramDayService>();
 builder.Services.AddScoped<IProgramCircuitService, ProgramCircuitService>();
 builder.Services.AddScoped<IWorkoutService, WorkoutService>();
