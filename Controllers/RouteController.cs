@@ -12,6 +12,7 @@ public class RouteController : IRouteController
         MapProgramEndpoints(app);
         MapSegmentEndpoints(app);
         MapDayEndpoints(app);
+        MapSessionEndpoints(app);
         MapCircuitEndpoints(app);
         MapWorkoutEndpoints(app);
         MapExerciseEndpoints(app);
