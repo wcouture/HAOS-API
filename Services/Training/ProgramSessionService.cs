@@ -48,8 +48,6 @@ public class ProgramSessionService : IProgramSessionService
         }
 
         existingSession.Title = session.Title;
-        existingSession.ProgramDayId = session.ProgramDayId;
-        existingSession.Circuits = session.Circuits;
 
         await _context.SaveChangesAsync();
         return existingSession;
