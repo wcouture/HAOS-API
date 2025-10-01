@@ -55,6 +55,8 @@ public class ExerciseService : IExerciseService
 
         existingExercise.Name = exercise.Name;
         existingExercise.DemoUrl = exercise.DemoUrl;
+        existingExercise.ShowDemo = exercise.ShowDemo;
+        existingExercise.PremiumDemo = exercise.PremiumDemo;
 
         _context.SaveChanges();
         return existingExercise;

@@ -8,4 +8,6 @@ public class Exercise
     public int Id { get; set; }
     public string? Name { get; set; }
     public string? DemoUrl { get; set; }
+    public bool ShowDemo { get; set; }
+    public bool PremiumDemo { get; set; }
 }
