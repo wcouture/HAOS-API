@@ -72,6 +72,10 @@ public class UserDataController : IUserDataController
         {
             return Results.NotFound(ex.Message);
         }
+        catch (Exception ex)
+        {
+            return Results.Problem(ex.Message);
+        }
     }
     public async Task<IResult> GetUserInfo(int id)
     {
