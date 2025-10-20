@@ -41,11 +41,11 @@ public class UserAccountService : IUserAccountService
         user.Password = _passwordHasher.HashPassword(user.Password);
 
 
-        user.CompletedWorkouts ??= [];
-        user.CompletedCircuits ??= [];
-        user.CompletedDays ??= [];
-        user.CompletedSegments ??= [];
-        user.CompletedPrograms ??= [];
+        user.CompletedWorkouts = [];
+        user.CompletedCircuits = [];
+        user.CompletedDays = [];
+        user.CompletedSegments = [];
+        user.CompletedPrograms = [];
         
         _trainingDb.AccountData.Add(user);
         await _trainingDb.SaveChangesAsync();
