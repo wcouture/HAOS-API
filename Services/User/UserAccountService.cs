@@ -148,8 +148,9 @@ public class UserAccountService : IUserAccountService
         user.CompletedSegments?.RemoveAll(s => segment_ids.Contains(s));
         user.CompletedDays?.RemoveAll(d => day_ids.Contains(d));
         user.CompletedSessions?.RemoveAll(s => session_ids.Contains(s));
-        user.CompletedWorkouts?.RemoveAll(w => workout_ids.Contains(w.Id));
         user.CompletedCircuits?.RemoveAll(c => circuit_ids.Contains(c));
+
+        user.CompletedWorkouts?.RemoveAll(w => workout_ids.Contains(w.WorkoutId));
 
         await _trainingDb.SaveChangesAsync();
         return user;
