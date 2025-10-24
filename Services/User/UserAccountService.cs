@@ -144,12 +144,12 @@ public class UserAccountService : IUserAccountService
 
         user.SubscribedPrograms?.Remove(program);
 
-        user.CompletedPrograms?.RemoveAll(p => p.Id == programId);
-        user.CompletedSegments?.RemoveAll(s => segment_ids.Contains(s.Id));
-        user.CompletedDays?.RemoveAll(d => day_ids.Contains(d.Id));
-        user.CompletedSessions?.RemoveAll(s => session_ids.Contains(s.Id));
-        user.CompletedWorkouts?.RemoveAll(w => workout_ids.Contains(w.Id));
-        user.CompletedCircuits?.RemoveAll(c => circuit_ids.Contains(c.Id));
+        user.CompletedPrograms?.RemoveAll(p => p == programId);
+        user.CompletedSegments?.RemoveAll(s => segment_ids.Contains(s));
+        user.CompletedDays?.RemoveAll(d => day_ids.Contains(d));
+        user.CompletedSessions?.RemoveAll(s => session_ids.Contains(s));
+        user.CompletedWorkouts?.RemoveAll(w => workout_ids.Contains(w));
+        user.CompletedCircuits?.RemoveAll(c => circuit_ids.Contains(c));
 
         await _trainingDb.SaveChangesAsync();
         return user;
