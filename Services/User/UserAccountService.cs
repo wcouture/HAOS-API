@@ -128,7 +128,7 @@ public class UserAccountService : IUserAccountService
         var days = await _trainingDb.ProgramDayData.Where(d => segment_ids.Contains(d.SegmentId)).ToListAsync();
         var day_ids = days.Select(d => d.Id).ToList();
 
-        var sessions = await _trainingDb.SessionData.Where(s => day_ids.Contains(s.DayId)).ToListAsync();
+        var sessions = await _trainingDb.SessionData.Where(s => day_ids.Contains(s.ProgramDayId)).ToListAsync();
         var session_ids = sessions.Select(s => s.Id).ToList();
 
         var circuits = await _trainingDb.CircuitData.Where(c => session_ids.Contains(c.SessionId)).ToListAsync();
