@@ -121,6 +121,21 @@ public class UserAccountService : IUserAccountService
     {
         var user = await _trainingDb.AccountData.FirstOrDefaultAsync(u => u.Id == userId) ?? throw new KeyNotFoundException("User not found.");
         var program = await _trainingDb.ProgramData.FirstOrDefaultAsync(p => p.Id == programId) ?? throw new KeyNotFoundException("Program not found.");
+        
+        var segments = await _trainingDb.SegmentData.Where(s => s.ProgramId == programId).ToListAsync();
+        var segment_ids = segments.Select(s => s.Id).ToList();
+
+        var days = await _trainingDb.ProgramDayData.Where(d => segment_ids.Contains(d.SegmentId)).ToListAsync();
+        var day_ids = days.Select(d => d.Id).ToList();
+
+        var sessions = await _trainingDb.SessionData.Where(s => day_ids.Contains(s.DayId)).ToListAsync();
+        var session_ids = sessions.Select(s => s.Id).ToList();
+
+        var circuits = await _trainingDb.CircuitData.Where(c => session_ids.Contains(c.SessionId)).ToListAsync();
+        var circuit_ids = circuits.Select(c => c.Id).ToList();
+
+        var workouts = await _trainingDb.WorkoutData.Where(w => circuit_ids.Contains(w.CircuitId)).ToListAsync();
+        var workout_ids = workouts.Select(w => w.Id).ToList();
 
         if (!user.SubscribedPrograms?.Any(p => p.Id == programId) ?? false)
         {
@@ -128,27 +143,13 @@ public class UserAccountService : IUserAccountService
         }
 
         user.SubscribedPrograms?.Remove(program);
-        
-        program.Segments.ToList().ForEach(segment =>
-        {
-            segment.Days.ToList().ForEach(day =>
-            {
-                day.Sessions.ToList().ForEach(session =>
-                {
-                    session.Circuits.ToList().ForEach(circuit =>
-                    {
-                        circuit.Workouts.ToList().ForEach(workout =>
-                        {
-                            user.CompletedWorkouts?.RemoveAll(cw => cw.WorkoutId == workout.Id);
-                        });
-                        user.CompletedCircuits?.RemoveAll(cc => cc == circuit.Id);
-                    });
-                    user.CompletedSessions?.RemoveAll(cs => cs == session.Id);
-                });
-                user.CompletedDays?.RemoveAll(cd => cd == day.Id);
-            });
-            user.CompletedSegments?.RemoveAll(cs => cs == segment.Id);
-        });
+
+        user.CompletedPrograms?.RemoveAll(p => p.Id == programId);
+        user.CompletedSegments?.RemoveAll(s => segment_ids.Contains(s.Id));
+        user.CompletedDays?.RemoveAll(d => day_ids.Contains(d.Id));
+        user.CompletedSessions?.RemoveAll(s => session_ids.Contains(s.Id));
+        user.CompletedWorkouts?.RemoveAll(w => workout_ids.Contains(w.Id));
+        user.CompletedCircuits?.RemoveAll(c => circuit_ids.Contains(c.Id));
 
         await _trainingDb.SaveChangesAsync();
         return user;
