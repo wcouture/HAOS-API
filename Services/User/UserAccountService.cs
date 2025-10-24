@@ -133,13 +133,14 @@ public class UserAccountService : IUserAccountService
         {
             segment.Days.ToList().ForEach(day =>
             {
-                day.Circuits.ToList().ForEach(circuit =>
+                day.Sessions.ToList().ForEach(session =>
                 {
-                    circuit.Workouts.ToList().ForEach(workout =>
+                    session.Circuits.ToList().ForEach(circuit =>
                     {
-                        user.CompletedWorkouts?.RemoveAll(cw => cw.WorkoutId == workout.Id);
+                        circuit.Work
+                        user.CompletedWorkouts?.RemoveAll(cw =>  == circuit.Id);
                     });
-                    user.CompletedCircuits?.RemoveAll(cc => cc.CircuitId == circuit.Id);
+                    user.CompletedCircuits?.RemoveAll(cc => cc.CircuitId == session.Id);
                 });
                 user.CompletedDays?.RemoveAll(cd => cd.DayId == day.Id);
             });
