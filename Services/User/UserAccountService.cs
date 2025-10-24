@@ -128,6 +128,24 @@ public class UserAccountService : IUserAccountService
         }
 
         user.SubscribedPrograms?.Remove(program);
+        
+        program.Segments.ToList().ForEach(segment =>
+        {
+            segment.Days.ToList().ForEach(day =>
+            {
+                day.Circuits.ToList().ForEach(circuit =>
+                {
+                    circuit.Workouts.ToList().ForEach(workout =>
+                    {
+                        user.CompletedWorkouts?.RemoveAll(cw => cw.WorkoutId == workout.Id);
+                    });
+                    user.CompletedCircuits?.RemoveAll(cc => cc.CircuitId == circuit.Id);
+                });
+                user.CompletedDays?.RemoveAll(cd => cd.DayId == day.Id);
+            });
+            user.CompletedSegments?.RemoveAll(cs => cs.SegmentId == segment.Id);
+        });
+
         await _trainingDb.SaveChangesAsync();
         return user;
     }
