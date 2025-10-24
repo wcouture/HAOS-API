@@ -137,14 +137,17 @@ public class UserAccountService : IUserAccountService
                 {
                     session.Circuits.ToList().ForEach(circuit =>
                     {
-                        circuit.Work
-                        user.CompletedWorkouts?.RemoveAll(cw =>  == circuit.Id);
+                        circuit.Workouts.ToList().ForEach(workout =>
+                        {
+                            user.CompletedWorkouts?.RemoveAll(cw => cw.WorkoutId == workout.Id);
+                        });
+                        user.CompletedCircuits?.RemoveAll(cc => cc == circuit.Id);
                     });
-                    user.CompletedCircuits?.RemoveAll(cc => cc.CircuitId == session.Id);
+                    user.CompletedSessions?.RemoveAll(cs => cs == session.Id);
                 });
-                user.CompletedDays?.RemoveAll(cd => cd.DayId == day.Id);
+                user.CompletedDays?.RemoveAll(cd => cd == day.Id);
             });
-            user.CompletedSegments?.RemoveAll(cs => cs.SegmentId == segment.Id);
+            user.CompletedSegments?.RemoveAll(cs => cs == segment.Id);
         });
 
         await _trainingDb.SaveChangesAsync();
