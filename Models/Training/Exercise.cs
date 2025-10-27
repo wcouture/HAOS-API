@@ -15,12 +15,12 @@ public class Exercise
 
 public enum ExerciseIcon
 {
-    Dumbbell,
-    RunningShoe,
-    YogaMat,
-    Swimming,
-    JumpRope,
-    Kettlebell,
-    Barbell,
-    Bicycle
+    Dumbbell = 1,
+    RunningShoe = 2,
+    YogaMat = 3,
+    Swimming = 4,
+    JumpRope = 5,
+    Kettlebell = 6,
+    Barbell = 7,
+    Bicycle = 8
 }
