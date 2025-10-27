@@ -57,8 +57,9 @@ public class ExerciseService : IExerciseService
         existingExercise.DemoUrl = exercise.DemoUrl;
         existingExercise.ShowDemo = exercise.ShowDemo;
         existingExercise.PremiumDemo = exercise.PremiumDemo;
+        existingExercise.Icon = exercise.Icon;
 
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
         return existingExercise;
     }
 }
